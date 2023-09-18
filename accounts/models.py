@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.models.fields.related import ForeignKey, OneToOneField
 from django_countries.fields import CountryField
 
 
@@ -10,6 +11,8 @@ class UserManager(BaseUserManager):
 
         if not username:
             raise ValueError('A user must have a username!')
+
+        email = email.lower() # Converts the entire email to lowercase
 
         user = self.model(
             email = self.normalize_email(email),
