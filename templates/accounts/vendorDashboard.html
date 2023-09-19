@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1 class="text-center mb-4 mt-5">Your Restaurant Dashboard</h1>
+<h3 class="text-center mb-4 mt-4">Welcome {{user.first_name}}</h3>
+<h4 class="text-center mb-5 mt-4">You are registered as a {{user.get_role}}</h4>
+
+{% include 'includes/alerts.html' %}
+{% endblock %}
