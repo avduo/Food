@@ -1,0 +1,11 @@
+{% autoescape off %}
+
+Hello {{user.first_name}},<br>
+<br>
+Please click on the the link below to confirm your registation to FoodOnline Maketplace, and confirm your email for your account:<br>
+<br>
+http://{{domain}}{% url 'activate' uidb64=uid token=token %}<br>
+<br>
+Kind Regards<br>
+FoodOnline Marketplace<br>
+{% endautoescape %}
