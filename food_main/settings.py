@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'accounts.context_processors.get_vendor',
             ],
         },
     },
@@ -161,5 +162,4 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD'),
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL'),
-#
 PASSWORD_RESET_TIMEOUT = 900 # 15 mins

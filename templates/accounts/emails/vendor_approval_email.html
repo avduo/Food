@@ -1,0 +1,21 @@
+{% autoescape off %}
+
+Hello {{user.first_name}},<br>
+<br>
+{% if is_verified %}
+Congratulations, your restaurant '{{vendor_name}}' has been approved on the FoodOnline Marketplace<br>
+<br>
+<br>
+Please login to your account <a href="http://{{domain}}{% url 'myAccount' %}">dashboard</a> and start adding to your menu.
+<br>
+<br>
+{% else %}
+We're sorry, You have not been approved to create your reastuarant '{{vendor_name}}' on the FoodOnline Marketplace<br>
+<br>
+Please contact us for more information contact <a href="mailto:support@FoodOnline.com">support@FoodOnline.com</a>.
+{% endif %}
+<br>
+<br>
+Kind Regards<br>
+FoodOnline Marketplace<br>
+{% endautoescape %}

@@ -31,3 +31,15 @@ def send_verification_email(request, user, mail_subject, email_template):
     mail = EmailMessage(mail_subject, message, to=[to_email] ) # Use 'to' instead of '[to_email]'
     mail.content_subtype = 'html'  # Set the content type to HTML if your template is HTML
     mail.send()
+
+def send_notification_email(mail_subject, email_template, context):
+    from_email = settings.DEFAULT_FROM_EMAIL
+    #current_site = get_current_site(request)
+    message = render_to_string(email_template, context, #{
+       #  'domain': str(current_site),
+       #  }
+    )
+    to_email = context['user'].email
+    mail = EmailMessage(mail_subject, message, to=[to_email] )
+    mail.content_subtype = 'html'  # Set the content type to HTML if your template is HTML
+    mail.send()
