@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db.models.fields.related import ForeignKey, OneToOneField
-from django_countries.fields import CountryField
+#from django_countries.fields import CountryField
 
 
 class UserManager(BaseUserManager):
@@ -98,8 +98,8 @@ class UserProfile(models.Model):
     #address_line_1 = models.CharField(max_length=50, blank=True, null=True)
     #address_line_2 = models.CharField(max_length=50, blank=True, null=True)
     address = models.CharField(max_length=250, blank=True, null=True)
-    #country = models.CharField(max_length=20, blank=True, null=True)
-    country = CountryField(blank_label="-select country-", null=True)
+    country = models.CharField(max_length=20, blank=True, null=True)
+    #country = CountryField(blank_label="-select country-", null=True)
     state = models.CharField(max_length=15, blank=True, null=True)
     city = models.CharField(max_length=15, blank=True, null=True)
     post_code = models.CharField(max_length=6, blank=True, null=True)
