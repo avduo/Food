@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'vendor',
+    'menu',
 ]
 
 MIDDLEWARE = [
@@ -155,13 +156,13 @@ SITE_ID = 1
 
 #Email Config
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST'),
-EMAIL_PORT = config('EMAIL_PORT', cast=int),
-EMAIL_HOST_USER = config('EMAIL_HOST_USER'),
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD'),
+EMAIL_HOST = config('EMAIL_HOST', default=''),
+EMAIL_PORT = config('EMAIL_PORT',default='', cast=int),
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default=''),
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default=''),
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL'),
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='EMAIL_HOST_USER'),
 
 PASSWORD_RESET_TIMEOUT = 900 # 15 mins
 
