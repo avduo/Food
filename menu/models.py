@@ -30,7 +30,7 @@ class ProductItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     image = models.ImageField(upload_to='productimages', height_field=None, width_field=None, max_length=None)
-    is_avaliable = models.BooleanField(default=True)
+    is_available = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

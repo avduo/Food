@@ -33,10 +33,10 @@ class Vendor(models.Model):
                     mail_subject = "Congratulations, your restaurant has been approved on FoodOnline"
                     #mail_template = 'accounts/emails/vendor_approval_email.html'
 
-                    send_notification_email( mail_subject, mail_template, context)
+                    send_notification_email(mail_subject, mail_template, context)
                 else:
                     # Send Email Notification
                     mail_subject= "We're sorry, You are not able to create a reastuarant on FoodOnline"
                     #mail_template='accounts/emails/vendor__email.html'
-                    send_notification_email( mail_subject, mail_template, context)
+                    send_notification_email(mail_subject, mail_template, context)
         return super(Vendor, self).save(*args, **kwargs)

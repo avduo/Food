@@ -20,7 +20,8 @@
                             <hr>
                             <!-- My Restaurants Form Start -->
                             <h6>Menu Categories</h6>
-                            <a href="#" class="btn btn-success float-right m-1">Add To Menu &nbsp;<i class="fa-solid fa-plus"></i></a>
+                            {% if categories %}
+                            <a href="{% url 'add_product' %}" class="btn btn-success float-right m-1">Add To Menu &nbsp;<i class="fa-solid fa-plus"></i></a>
                             <a href="{% url 'add_category' %}" class="btn btn-info float-right m-1">Add Category &nbsp;<i class="fa-solid fa-plus"></i></a>
                             <table class="table table-hover table-borderless">
                                 <tbody>
@@ -32,11 +33,18 @@
                                             <small class="text-muted">{{ cat.description }}</small>
                                         </a>
                                         </td>
-                                    <td><a href="{% url 'edit_category' cat.id %}" style="color: unset;"><i class="fa-solid fa-pencil"></i></a> &nbsp; <a href="{% url 'delete_category' cat.id %}" onclick="return confirm('Are you sure you want to delete this category?')"><i class="fa-solid fa-trash text-danger"></i></a></td>
+                                    <td><a href="{% url 'edit_category' cat.id %}" style="color: unset;"><i class="fa-solid fa-pencil"></i></a> &nbsp;
+                                        <a href="{% url 'delete_category' cat.id %}" onclick="return confirm('Are you sure you want to delete this category?')"><i class="fa-solid fa-trash text-danger"></i></a></td>
                                   </tr>
                                   {% endfor %}
                                 </tbody>
                               </table>
+                              {% else %}
+                              <h5 class="text-center m-4">You have not added any Categories yet!</h5>
+                              <div class="text-center">
+                                <a href="{% url 'add_category' %}" class="btn btn-success">Add a Category &nbsp;<i class="fa-solid fa-plus"></i></a>
+                              </div>
+                              {% endif %}
                             <!-- My Restaurants Form End -->
                         </div>
                     </div>

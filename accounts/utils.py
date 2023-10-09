@@ -36,8 +36,8 @@ def send_notification_email(mail_subject, email_template, context):
     from_email = settings.DEFAULT_FROM_EMAIL
     #current_site = get_current_site(request)
     message = render_to_string(email_template, context, #{
-       #  'domain': str(current_site),
-       #  }
+        #'domain': str(current_site),
+    #}
     )
     to_email = context['user'].email
     mail = EmailMessage(mail_subject, message, to=[to_email] )

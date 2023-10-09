@@ -8,9 +8,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ProductItemAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('product_title',)}
-    list_display = ('product_title', 'category', 'vendor', 'price', 'sale_price', 'is_avaliable', 'updated_at')
+    list_display = ('product_title', 'category', 'vendor', 'price', 'sale_price', 'is_available', 'updated_at')
     search_fields = ('product_title', 'category__category_name', 'vendor__vendor_name', 'price')
-    list_filter =('is_avaliable',)
+    list_filter =('is_available',)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ProductItem, ProductItemAdmin)

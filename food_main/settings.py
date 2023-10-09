@@ -156,14 +156,14 @@ SITE_ID = 1
 
 #Email Config
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST', default=''),
-EMAIL_PORT = config('EMAIL_PORT',default='', cast=int),
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default=''),
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default=''),
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_PORT = config('EMAIL_PORT',default='', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='EMAIL_HOST_USER'),
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='EMAIL_HOST_USER')
 
 PASSWORD_RESET_TIMEOUT = 900 # 15 mins
 
-GOOGLE_API_KEY = config('GOOGLE_MAP_KEY'),
+GOOGLE_API_KEY = config('GOOGLE_MAP_KEY')

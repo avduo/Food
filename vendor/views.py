@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .forms import VendorForm
 from accounts.forms import UserProfileForm
 
-from menu.forms import CategoryForm
+from menu.forms import CategoryForm, ProductItemForm
 from accounts.models import UserProfile
 from .models import Vendor
 from django.contrib import messages
@@ -77,7 +77,7 @@ def add_category(request):
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
             category.vendor = get_vendor(request)
-            category.slug = slugify(category_name)
+            category.slug = slugify(category_name)+'-'+str(category.id)
             form.save()
             messages.success(request, 'New category has been saved successfuly! ')
             return redirect('menu_builder')
@@ -121,3 +121,59 @@ def delete_category(request, pk=None):
     category.delete()
     messages.success(request, 'Your category has been deleted successfuly! ')
     return redirect('menu_builder')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            product_title = form.cleaned_data['product_title']
+            product = form.save(commit=False)
+            product.vendor = get_vendor(request)
+            product.slug = slugify(product_title)
+            form.save()
+            messages.success(request, 'Your product has been updated successfuly! ')
+            return redirect('productitems_category', product.category.id)
+        else:
+            print(form.errors)
+    else:
+        form = ProductItemForm()
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
+    context = {
+        'form' : form,
+    }
+    return render(request, 'vendor/add_product.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def edit_product(request, pk=None):
+    product = get_object_or_404(ProductItem, pk=pk)
+    if request.method == 'POST':
+        form = ProductItemForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            product_title = form.cleaned_data['product_title']
+            product = form.save(commit=False)
+            product.vendor = get_vendor(request)
+            product.slug = slugify(product_title)
+            form.save()
+            messages.success(request, 'Your product has been updated successfuly! ')
+            return redirect('productitems_category', product.category.id)
+        else:
+            print(form.errors)
+    else:
+        form = ProductItemForm(instance=product)
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
+    context = {
+        'form' : form,
+        'product': product
+    }
+    return render(request, 'vendor/edit_product.html', context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def delete_product(request, pk=None):
+    product = get_object_or_404(ProductItem, pk=pk)
+    product.delete()
+    messages.success(request, 'Your product has been deleted successfuly! ')
+    return redirect('productitems_category', product.category.id)

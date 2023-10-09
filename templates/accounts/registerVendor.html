@@ -79,7 +79,10 @@
                                         {% for field in form %}
                                             {% if field.errors %}
                                                 {% for error in field.errors %}
-                                                <li style="color: red;">{{error}}</li>
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{error}}
+                                                  </div>
+                                                {% comment %} <li style="color: red;">{{error}}</li> {% endcomment %}
                                                 {% endfor %}
                                             {% endif %}
                                         {% endfor %}
