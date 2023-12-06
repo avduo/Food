@@ -18,8 +18,8 @@
                         <div class="user-holder">
                             <div id="close-me" class="user-message" style="background-color:#1e73be;">
                                 <a class="close close-div" href="#"><i class="icon-cross-out"></i></a>
-                                <h2>Welcome to your Restaurant {{user.first_name}}</h2>
-                                <p>Restaurant Dashboard gives you quick access to settings and tools for managing your Account like [Change address] and [Change password] . You can [manage Restaurant] Build Menu , Manage Orders, Bookings, Reviews, Memberships, Withdrawals, Earnings, Statements, Change Password, Location and if you are you Restaurant Owner can also [Manage Team].</p>
+                                <h2>{{user.first_name}} Welcome to your Restaurant</h2>
+                                <p>Restaurant Dashboard gives you quick access to settings and tools for managing your Account like <a href="{% url 'vprofile' %}">Change address</a> and [Change password] . You can manage Restaurant <a href="{% url 'menu_builder' %}">Build Menu</a> , Manage Orders, Withdrawals, Earnings, Statements, Change Password and Location.</p>
                             </div>
                             <h5 class="text-uppercase text-center">Overview</h5>
                             <div class="row">

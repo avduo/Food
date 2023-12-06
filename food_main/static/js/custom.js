@@ -1,3 +1,5 @@
+// Vendor Auto add Address
+
 let autocomplete;
 
 function initAutoComplete(){
@@ -69,3 +71,51 @@ function onPlaceChanged (){
         }
     }
 }
+
+// Add to Cart
+$(document).ready(function(){
+    $('.add_to_cart').on('click', function(e){
+        e.preventDefault();
+
+        product_id = $(this).attr('data-id');
+        url = $(this).attr('data-url');
+
+        data = {
+            product_id:product_id,
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            success: function(response){
+                console.log(response)
+            }
+        })
+    })
+    //Place the cart item quantityon load
+    console.log('Before each loop');
+    // $('.item_qty').each(function(){
+    //     var the_id = $(this).attr('id')
+    //     var qty = $(this).attr('data-qty')
+    //     console.log('Initial quantity for', this.id, ':', qty);
+    //     $('#' + the_id).html(qty)
+    // })
+
+    $('.item_qty').each(function(){
+        var the_id = $(this).attr('id')
+        var qty = $(this).attr('data-qty')
+        console.log('Initial quantity for', this.id, ':', qty);
+        $('#'+the_id).html(qty)
+    })
+
+    // $(document).ready(function(){
+    //     // Place the cart item quantity on load
+    //     $('.item_qty').each(function(){
+    //         var qty = $(this).text();
+    //         console.log('Initial quantity for', this.id, ':', qty);
+    //         $(this).html(qty);
+    //     });
+    // });
+
+});
