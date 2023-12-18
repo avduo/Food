@@ -72,50 +72,150 @@ function onPlaceChanged (){
     }
 }
 
-// Add to Cart
+//Cart
 $(document).ready(function(){
+    // Add to cart
     $('.add_to_cart').on('click', function(e){
         e.preventDefault();
 
         product_id = $(this).attr('data-id');
         url = $(this).attr('data-url');
 
-        data = {
-            product_id:product_id,
-        }
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(response){
+                console.log(response)
+                if (response.status == 'login_required'){
+                   swal(response.message, '', 'info', {
+                    button: "Login",
+                  }).then(function(){
+                    window.location = '/login';
+                   })
+                }else if (response.status == 'Failed'){
+                    swal(response.message, '', 'error')
+                }else{
+                    $('#cart_counter').html(response.cart_counter['cart_count'])
+                    $('#qty-'+product_id).html(response.qty)
+
+                    //subtotal, tax and Grand total
+                    applyCartAmounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total'],
+                    )
+                }
+            }
+        })
+    })
+    //Place the cart items on load
+    $('.item_qty').each(function(){
+        var the_id = $(this).attr('id')
+        var qty = $(this).attr('data-qty')
+        // console.log('Initial quantity for', this.id, ':', qty);
+        $('#'+ the_id).html(qty)
+    })
+
+    //Remove cart items
+    $('.remove_from_cart').on('click', function(e){
+        e.preventDefault();
+
+        product_id = $(this).attr('data-id');
+        url = $(this).attr('data-url');
+        cart_id = $(this).attr('id');
 
         $.ajax({
             type: 'GET',
             url: url,
-            data: data,
             success: function(response){
                 console.log(response)
+                if (response.status == 'login_required'){
+                    swal(response.message, '', 'info', {
+                     button: "Login",
+                   }).then(function(){
+                     window.location = '/login';
+                    })
+                 }else if (response.status == 'Failed'){
+                     swal(response.message, '', 'error')
+                 }else{
+                    $('#cart_counter').html(response.cart_counter['cart_count'])
+                    $('#qty-'+product_id).html(response.qty)
+
+                    if (window.location.pathname == '/cart/'){
+                        deleteCartItem(response.qty, cart_id);
+                        checkEmptyCart()
+                    }
+
+                    //subtotal, tax and Grand total
+                    applyCartAmounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total'],
+                    )
+                }
             }
         })
     })
-    //Place the cart item quantityon load
-    console.log('Before each loop');
-    // $('.item_qty').each(function(){
-    //     var the_id = $(this).attr('id')
-    //     var qty = $(this).attr('data-qty')
-    //     console.log('Initial quantity for', this.id, ':', qty);
-    //     $('#' + the_id).html(qty)
-    // })
+    // Delete cart items
+    $('.delete_cart').on('click', function(e){
+        e.preventDefault();
 
-    $('.item_qty').each(function(){
-        var the_id = $(this).attr('id')
-        var qty = $(this).attr('data-qty')
-        console.log('Initial quantity for', this.id, ':', qty);
-        $('#'+the_id).html(qty)
+        cart_id = $(this).attr('data-id');
+        url = $(this).attr('data-url');
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(response){
+                console.log(response)
+                // if (response.status == 'login_required'){
+                //     swal(response.message, '', 'info', {
+                //      button: "Login",
+                //    }).then(function(){
+                //      window.location = '/login';
+                //     })
+                //  }else
+                 if (response.status == 'Failed'){
+                     swal(response.message, '', 'error')
+                 }else{
+                    $('#cart_counter').html(response.cart_counter['cart_count'])
+                    swal(response.status, response.message, 'success')
+
+                    deleteCartItem(0, cart_id);
+                    checkEmptyCart()
+
+                    //subtotal, tax and Grand total
+                    applyCartAmounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total'],
+                    )
+
+                }
+            }
+        })
     })
+    // Delete Cart element if qty is 0
+    function deleteCartItem(cartItemQty, cart_id){
+        if (cartItemQty <= 0){
+            // Remove the element
+            document.getElementById("cart-item-"+cart_id).remove()
+        }
 
-    // $(document).ready(function(){
-    //     // Place the cart item quantity on load
-    //     $('.item_qty').each(function(){
-    //         var qty = $(this).text();
-    //         console.log('Initial quantity for', this.id, ':', qty);
-    //         $(this).html(qty);
-    //     });
-    // });
-
+    }
+    //Check if cart is empty
+    function checkEmptyCart(){
+        var cart_counter = document.getElementById('cart_counter').innerHTML
+        if (cart_counter == 0){
+            document.getElementById("empty-cart").style.display = "block";
+        }
+    }
+    //Apply cart amounts
+    function applyCartAmounts(subtotal, tax, grand_total){
+        if (window.location.pathname == '/cart/'){
+            $('#subtotal').html(subtotal)
+            $('#tax').html(tax)
+            $('#total').html(grand_total)
+        }
+    }
 });

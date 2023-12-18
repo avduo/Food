@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Main Section Start -->
+<div class="main-section pt-5">
+    <div class="page-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab"><i class="icon- icon-room_service"></i>Cart Products</a></li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder">
+
+                                    <div class="text-center p-5" id="empty-cart" style="display: none;">
+                                        <h3>Sorry your cart is empty!</h3>
+                                        <a href="{% url 'marketplace'%}" class="btn btn-outline-danger text-uppercase font-weight-bold">back to the Marketplace</a>
+                                    </div>
+
+                                    <div id="menu-item-list-6272" class="menu-itam-list">
+
+                                        <ul>
+                                            {% if cart_items %}
+                                                {% for item in cart_items %}
+                                                <li id="cart-item-{{ item.id }}">
+                                                    <div class="image-holder"> <a href="#"><img src="{{ item.product_item.image.url }}" alt="{{product}}"></a></div>
+                                                    <div class="text-holder">
+                                                        <h6>{{item.product_item}}</h6>
+                                                        <span>{{item.product_item.description}}</span>
+                                                        <a href="{% url 'vendor_detail' item.product_item.vendor.vendor_slug %}" class="badge badge-warning">{{ item.product_item.vendor }}</a>
+                                                    </div>
+                                                    <div class="price-holder">
+                                                        <span class="price">{{item.product_item.price}} €</span>
+                                                        <a href="#" class="remove_from_cart" data-id="{{ item.product_item.id }}" id="{{ item.id }}" data-url="{% url 'remove_from_cart' item.product_item.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
+                                                        <label id="qty-{{ item.product_item.id }}" ml-2>0</label>
+                                                        <a href="#" class="add_to_cart" data-id="{{ item.product_item.id }}" data-url="{% url 'add_to_cart' item.product_item.id %}"><i class="icon-plus4 text-color"></i></a>
+                                                        <a href="#" class="delete_cart" data-id="{{ item.id }}" data-url="{% url 'delete_cart' item.id %}"><i class="icon-delete text-color"></i></a>
+                                                    </div>
+                                                </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="text-center p-5">
+                                                    <h3>Sorry your cart is empty!</h3>
+                                                    <a href="{% url 'marketplace'%}" class="btn btn-outline-danger text-uppercase font-weight-bold">back to the Marketplace</a>
+                                                </div>
+
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                    {% for item in cart_items %}
+
+                                    <span id="qty-{{ item.product_item.id }}" class="item_qty d-none" data-qty="{{ item.quantity }}">{{ item.quantity }}</span>
+
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--Your order section-->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab"><i class="icon- icon-room_service"></i>Total</a></li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder">
+                                    <div>
+                                        <ul>
+                                            <li style="list-style-type: none;" >
+                                                Subtotal
+                                                <span class="price float-right">
+                                                    <span id="subtotal">{{ subtotal }}</span>
+                                                    <span class="currency">€</span>
+                                                </span>
+                                            </li>
+                                            <li style="list-style-type: none;" >
+                                                Tax
+                                                <span class="price float-right">
+                                                    <span id="tax">{{ tax }}</span>
+                                                    <span class="currency">€</span>
+                                                </span>
+                                            </li>
+                                            <li style="list-style-type: none; font-weight: 600;" >
+                                                Total
+                                                <span class="price float-right">
+                                                    <span id="total">{{ grand_total}}</span>
+                                                    <span class="currency">€</span>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Section End -->
+
+{% include 'includes/alerts.html' %}
+{% endblock %}
