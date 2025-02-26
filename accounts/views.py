@@ -203,26 +203,35 @@ def resetPasswordValidate(request, uidb64, token):
         messages.info(request, 'Please reset your password')
         return redirect('resetPassword')
     else:
-        messages.error(request, 'Sorry this link has expired!')
+        messages.error(request, 'Sorry this link has expired or is invalid!')
         return redirect('myAccount')
 
 def resetPassword(request):
-    if not request.user.is_superuser:
-        return redirect('home')
+    # if not request.user.is_superuser:
+    #     return redirect('home')
+    if 'uid' not in request.session:
+        messages.error(request, 'Unauthorized access to password reset page.')
+        return redirect('login')
+
     if request.method == 'POST':
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
 
         if password == confirm_password:
-            pk = request.session.get('uid')
-            user = User.objects.get (pk=pk)
-            user.set_password(password)
-            user.is_active = True
-            user.save()
-            messages.success(request, 'You have reset your password, you can now sign in and have access to your account.')
-            return redirect ('login')
-            pass
+            try:
+                pk = request.session.get('uid')
+                user = User.objects.get (pk=pk)
+                user.set_password(password)
+                user.is_active = True
+                user.save()
+                messages.success(request, 'You have reset your password, you can now sign in and have access to your account.')
+                return redirect ('myAccount')
+                pass
+            except:
+                messages.error(request, 'An error occurred while resetting your password.')
+                return redirect('myAccount')
         else:
             messages.error(request, 'The passwords you have entered do not match!')
             return redirect('resetPassword')
+        
     return render(request, 'accounts/resetPassword.html')
