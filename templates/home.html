@@ -147,6 +147,9 @@
 										{% if vendor.user_profile.city and vendor.user_profile.state and vendor.user_profile.post_code%}
 										<address><i class="icon-local_pizza"></i>&nbsp<span>{{ vendor.user_profile.city }}, {{ vendor.user_profile.state }}, {{ vendor.user_profile.post_code }} </span></address>
 										{% endif %}
+										{% if vendor.kms %}
+										<span><small><b>{{ vendor.kms }} km</b> away</small></span>
+										{% endif %}
 									</div>
 								</div>
 							</li>
