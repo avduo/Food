@@ -51,6 +51,10 @@
                                                 {% if vendor.user_profile.address and vendor.user_profile.state and vendor.user_profile.post_code %}
 										        <address><i class="icon-local_pizza"></i> <span class="text-muted">{{ vendor.user_profile.address }}, {{ vendor.user_profile.state }}, {{ vendor.user_profile.post_code }} </span></address>
 										        {% endif %}
+                                                <br>
+                                                {% if source_location %}
+                                                <span><small><b>{{ vendor.kms }} km</b> from {{ source_location }}</small></span>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="list-option">
