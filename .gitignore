@@ -165,7 +165,7 @@ dmypy.json
 cython_debug/
 
 #Qudo
-.qudo/
+.qudo
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
