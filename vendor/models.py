@@ -97,6 +97,7 @@ class OpeningHours(models.Model):
     class Meta:
         ordering = ('day', '-opening_time')
         unique_together = ('vendor','day', 'opening_time', 'closing_time')
+        verbose_name_plural = 'Opening Hours'
 
     def __str__(self):
         return self.get_day_display()
