@@ -1,10 +1,12 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from .forms import VendorForm
+from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
+from django.http import JsonResponse
+from .forms import VendorForm, OpeningHoursForm
 from accounts.forms import UserProfileForm
 
 from menu.forms import CategoryForm, ProductItemForm
 from accounts.models import UserProfile
-from .models import Vendor
+from .models import Vendor, OpeningHours
+from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.views import check_role_vendor
@@ -178,3 +180,46 @@ def delete_product(request, pk=None):
     product.delete()
     messages.success(request, 'Your product has been deleted successfuly! ')
     return redirect('productitems_category', product.category.id)
+
+def opening_hours(request):
+    opening_hours = OpeningHours.objects.filter(vendor=get_vendor(request))
+    form = OpeningHoursForm()
+    context = {
+        'form' : form,
+        'opening_hours' : opening_hours,
+    }
+    return render(request, 'vendor/opening_hours.html', context)
+
+def add_opening_hours(request):
+    #Handle the data and save in the database
+    if request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+            vendor = get_vendor(request)
+            day = request.POST.get('day')
+            opening_time = request.POST.get('opening_time')
+            closing_time = request.POST.get('closing_time')
+            is_closed = request.POST.get('is_closed') == 'true'
+
+            try:
+                hour = OpeningHours.objects.create(vendor=get_vendor(request), day=day, opening_time=opening_time, closing_time=closing_time, is_closed=is_closed)
+                if hour:
+                    day = OpeningHours.objects.get(id=hour.id)
+                    if day.is_closed:
+                        response = {'status': 'success', 'id': hour.id, 'day': day.get_day_display(), 'is_closed': 'Closed'}
+                    else:
+                        response = {'status': 'success', 'id': hour.id, 'day': day.get_day_display(), 'opening_time': hour.opening_time, 'closing_time': hour.closing_time}
+                return JsonResponse(response)
+            except IntegrityError as e:
+                response ={'status': 'failed', 'message': 'Do opening times already exist?'}
+                return JsonResponse(response)
+        else:
+            return HttpResponse('Invalid request')
+    else:
+        return HttpResponse('You are not authorized to add opening hours')
+
+def delete_opening_hours(request, pk=None):
+    if request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            hour = get_object_or_404(OpeningHours, pk=pk)
+            hour.delete()
+            return JsonResponse({'status': 'success', 'id': pk})

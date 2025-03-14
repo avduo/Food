@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .context_processors import get_cart_counter, get_cart_amounts
 from django.http import HttpResponse, JsonResponse
 
-from vendor.models import Vendor
+from vendor.models import Vendor, OpeningHours
 from menu.models import Category, ProductItem
 from django.db.models import Prefetch
 from .models import Cart
@@ -13,10 +13,11 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
 
+from datetime import date, datetime
+
 def marketplace(request):
     vendors = Vendor.objects.filter(is_verified=True, user__is_active=True)
     vendor_count = vendors.count()
-    # print(vendors)
     context = {
         'vendors' : vendors,
         'vendor_count': vendor_count,
@@ -32,6 +33,25 @@ def vendor_detail(request, vendor_slug):
         )
     )
 
+    opening_hours = OpeningHours.objects.filter(vendor=vendor).order_by('day', '-opening_time')
+    #Check current day opening hours
+    today_date = date.today()
+    today = today_date.isoweekday()
+
+    current_opening_hours = OpeningHours.objects.filter(vendor=vendor, day=today)
+    now = datetime.now()
+    current_time = now.strftime('%H:%M:%S')
+
+    is_open = None
+    for i in current_opening_hours:
+        start = str(datetime.strptime(i.opening_time, "%I:%M %p").time())
+        end = str(datetime.strptime(i.closing_time, "%I:%M %p").time())
+        if current_time > start and current_time < end:
+            is_open = True
+            break
+        else:
+            is_open = False
+
     if  request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
     else:
@@ -41,6 +61,9 @@ def vendor_detail(request, vendor_slug):
         'vendor': vendor,
         'categories': categories,
         'cart_items': cart_items,
+        'opening_hours': opening_hours,
+        'current_opening_hours': current_opening_hours,
+        'is_open': is_open,
     }
     return render(request, 'marketplace/vendor_detail.html', context)
 
@@ -129,22 +152,6 @@ def search (request):
         longitude = request.GET['lng']
         radius = request.GET['radius']
         keyword = request.GET['keyword']
-        # print(address, latitude, longitude, radius, r_name)
-
-        # Get vendor ids that has the food item the user is searching for
-        # fetch_vendor_ids = ProductItem.objects.filter(product_title__icontains=keyword, is_available=True).values_list('vendor', flat=True)
-
-        # vendors = Vendor.objects.filter(
-        #     Q(id__in=fetch_vendor_ids, is_verified=True, user__is_active=True)) | (
-        #         Q(vendor_name__icontains=keyword, is_verified=True, user__is_active=True))
-
-        # if latitude and longitude and radius:
-        #     pnt = GEOSGeometry('POINT(%s %s)' % (longitude, latitude), srid=4326)
-
-        #     vendors = Vendor.objects.filter(
-        #         Q(id__in=fetch_vendor_ids, is_verified=True, user__is_active=True)) | (
-        #         Q(vendor_name__icontains=keyword, is_verified=True, user__is_active=True),
-        #         user_profile__location__distance_lte=(pnt, D(km=radius)))
 
         # Fetch vendor IDs based on product search
         fetch_vendor_ids = ProductItem.objects.filter(

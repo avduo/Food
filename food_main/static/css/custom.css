@@ -19,3 +19,62 @@
     font-size: 12px;
     cursor: pointer;
 }
+
+table > tbody > tr > td {
+    border: none !important;
+  }
+
+#opening-hours select {
+    padding: 5px 10px !important;
+}
+
+.btn-success.add_hours {
+    padding: 7px 15px;
+    min-width: 92px;
+}
+
+#opening-hours input[type="checkbox"] {
+    appearance: none;
+    width: 35px;
+    height: 35px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+/* Checked state */
+#opening-hours input[type="checkbox"]:checked {
+    appearance: none;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Custom checkmark */
+.checkbox-wrapper .checkmark {
+    position: absolute;
+    top: 43%; /* Center vertically */
+    left: 20px; /* Adjust based on checkbox width (40px / 2) */
+    transform: translateY(-50%); /* Center vertically */
+    color: white;
+    font-size: 34px;
+    pointer-events: none; /* Ensure clicks go through to the checkbox */
+    opacity: 0; /* Hide by default */
+    transition: opacity 0.2s; /* Smooth transition */
+}
+
+/* Show the checkmark when the checkbox is checked */
+.checkbox-wrapper input[type="checkbox"]:checked + .checkmark {
+    opacity: 1;
+}
+
+.delivery-timing a {
+    text-align: center;
+    padding: 15px 10px 8px 10px !important;
+    margin-bottom: -5px;
+}
+
+.delivery-timing ul li ul.delivery-dropdown li, .delivery-timing ul li ul.delivery-dropdown li:first-child {
+    border: none !important;
+}

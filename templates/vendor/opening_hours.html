@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Main Section Start -->
+<div class="main-section">
+    <!-- Load the cover here-->
+    {% include 'includes/cover.html' %}
+    <div class="page-section account-header buyer-logged-in">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <!--Load the sidebar here-->
+                    {% include 'includes/v_sidebar.html' %}
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <div class="user-dashboard loader-holder">
+                        <div class="user-holder">
+                            <h4 class="text-uppercase text-center mb-3">Manage Your Restaurant Opening Hours</h4>
+                            <hr>
+                            <!-- My Restaurants Form Start -->
+                            <h6>Your Opening Hours</h6>
+                            {% if opening_hours %}
+                            <table class="table opening-hours">
+                                <tbody>
+                                    {% for hour in opening_hours %}
+                                    <tr id="hour-{{ hour.id }}">
+                                        <td><b>{{ hour }}</b></td>
+                                        <td>{% if hour.is_closed %}Closed {% else %} {{ hour.opening_time }} - {{ hour.closing_time }} {% endif %}</td>
+                                        <td><a href="#"><i class="text-primary fa-solid fa-pencil"></i></a></td>
+                                        <td><a href="#"><i class="text-danger delete_hours fa-solid fa-trash" data-url="{% url 'delete_opening_hours' hour.id %}"></i></a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% else %}
+                                <h5 class="text-center m-4">You have not added any Opening Hours yet!</h5>
+                            {% endif %}
+
+                            <form id="opening-hours">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class ="col-md-3">
+                                            {{form.day}}
+                                    </div>
+                                    <div class ="col-md-2">
+                                            {{form.opening_time}}
+                                    </div>
+                                    <div class ="col-md-2">
+                                            {{form.closing_time}}
+                                    </div>
+                                    <div class ="checkbox-wrapper col-md-3 d-inline-flex">
+                                            {{form.is_closed}}
+                                            <span class="checkmark">✔</span>
+                                            <p>Set As Closed</p>
+                                    </div>
+                                    <div class ="col-md-2">
+                                        <input type="hidden" value="{% url 'add_opening_hours' %}" id="add_hours_url">
+                                        <button class="btn btn-success add_hours">Add Hours</button>
+                                </div>
+                            <!-- My Restaurants Form End -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Section End -->
+
+{% include 'includes/alerts.html' %}
+{% endblock %}

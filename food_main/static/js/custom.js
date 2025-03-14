@@ -218,4 +218,75 @@ $(document).ready(function(){
             $('#total').html(grand_total)
         }
     }
+
+    //Add Shop Opening Hours
+    $('.add_hours').on('click', function(e){
+        e.preventDefault();
+        var day = document.getElementById('id_day').value;
+        var opening_time = document.getElementById('id_opening_time').value;
+        var closing_time = document.getElementById('id_closing_time').value;
+        var is_closed = document.getElementById('id_is_closed').checked;
+        var cfrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        var url = document.getElementById('add_hours_url').value;
+
+
+        console.log(day, opening_time, closing_time, is_closed, cfrf_token)
+        if (is_closed == true){
+            condition = "day !=''"
+        }else{
+            condition = "day != '' && opening_time != '' && closing_time != ''"
+        }
+        if(eval(condition)){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'day': day,
+                    'opening_time': opening_time,
+                    'closing_time': closing_time,
+                    'is_closed': is_closed,
+                    'csrfmiddlewaretoken': cfrf_token
+                },
+                success: function(response){
+                    console.log(response)
+                    if(response.status == 'success'){
+                        if(response.is_closed == 'Closed'){
+                            html = '<tr id="hour-'+response.id+'"><td><b>'+response.day+'</b></td><td>Closed</b></td><td><a href="#"><i class="text-primary fa-solid fa-pencil"></i></a></td><td><a href="#"><i class="text-danger delete_hours fa-solid fa-trash" data-url="/vendor/opening-hours/delete/'+response.id+'/"></i></a></td></tr>';
+                        }else{
+                        html = '<tr id="hour-'+response.id+'"><td><b>'+response.day+'</b></td><td>'+response.opening_time+' - '+response.closing_time+'</td><td><a href="#"><i class="text-primary fa-solid fa-pencil"></i></a></td><td><a href="#"><i class="text-danger delete_hours fa-solid fa-trash"data-url="/vendor/opening-hours/delete/'+response.id+'/"></i></a></td></tr>';
+                        }
+                        $('.opening-hours').append(html);
+                        document.getElementById("opening-hours").reset();
+                        swal('You have updated your opening hours', '', 'success')
+                    }else{
+                        swal(response.message, '', 'error')
+                    }
+
+                }
+            })
+        }else{
+            swal('Please fill all the fields','', 'info')
+        }
+    })
+    
+    //Delete Shop Opening Hours
+    $(document).on('click', '.delete_hours', function(e){
+        e.preventDefault();
+        url = $(this).attr('data-url');
+        console.log(url);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(response){
+                console.log(response)
+                if(response.status == 'success'){
+                    document.getElementById('hour-'+response.id).remove()
+                    // $('.opening-hours').empty();
+                    swal('You have deleted your opening hours', '', 'success')
+                }else{
+                    swal(response.message, '', 'error')
+                }
+            }
+        })
+    })
 });
