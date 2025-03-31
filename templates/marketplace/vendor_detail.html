@@ -12,17 +12,26 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="company-info-detail">
                         <div class="company-info">
-                            <div class="img-holder align-content-center">
+                            <div class="img-holder listing align-content-center">
                                 <figure>
                                     {% if vendor.user_profile.profile_picture %}
-                                <img src="{{vendor.user_profile.profile_picture.url}}" alt="{{vendor.vendor_name}}">
-                                {% else %}
-                                <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Image">
-                                {% endif %}
+                                        <img src="{{vendor.user_profile.profile_picture.url}}" alt="{{vendor.vendor_name}}">
+                                    {% else %}
+                                        <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Image">
+                                    {% endif %}
                                 </figure>
+                                {% if vendor.is_open %}
+                                    <span class="restaurant-status open">
+                                        <em class="bookmarkRibbon"></em>Open
+                                    </span>
+                                {% else %}
+                                    <span class="restaurant-status close">
+                                        <em class="bookmarkRibbon"></em>Closed
+                                    </span>
+                                {% endif %}
                             </div>
                             <div class="text-holder">
-                                <span class="restaurant-title">{{vendor.vendor_name}} {% if not is_open %}[Closed]{% endif %}</span>
+                                <span class="restaurant-title">{{vendor.vendor_name}}</span>
                                 <div class="text">
                                     {% if vendor.user_profile.city and vendor.user_profile.state and vendor.user_profile.post_code%}
                                 <i class="icon-local_pizza"></i>
@@ -96,7 +105,8 @@
                                         <ul>
                                             {% for product in category.productitems.all %}
                                             <li>
-                                                <div class="image-holder"> <a href="#"><img src="{{ product.image.url }}" alt="{{product}}"></a></div>
+                                                <div class="image-holder"> <a href="{{ product.image.url }}" data-lightbox="image-{{ item.id }}" data-title="{{ product }}">
+                                                    <img src="{{ product.image.url }}" alt="{{ product }}"></a></div>
                                                 <div class="text-holder">
                                                     <h6>{{product}}</h6>
                                                     <span>{{product.description}}</span>

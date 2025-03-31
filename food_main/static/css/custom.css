@@ -78,3 +78,9 @@ table > tbody > tr > td {
 .delivery-timing ul li ul.delivery-dropdown li, .delivery-timing ul li ul.delivery-dropdown li:first-child {
     border: none !important;
 }
+
+.company-info-detail .listing .restaurant-status {
+    top: -10px;
+    left: 5px;
+
+}

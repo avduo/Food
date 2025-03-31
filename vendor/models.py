@@ -15,39 +15,60 @@ class Vendor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateField(auto_now=True)
 
-    def __str__(self):
-        return self.vendor_name
+    # def __str__(self):
+    #     return self.vendor_name
+
+    # def is_open(self):
+    #     # Check current day's opening hours
+    #     today_date = date.today()
+    #     today = today_date.isoweekday()
+
+    #     current_opening_hours = OpeningHours.objects.filter(vendor=self, day=today)
+    #     now = datetime.now().strftime("%I:%M %p")  # Convert current time to string (e.g., "07:00 PM")
+
+        # is_open = None
+        # for i in current_opening_hours:
+        #     # Extract opening and closing times as strings
+        #     opening_time = i.opening_time  # Already in "%I:%M %p" format (e.g., "07:00 PM")
+        #     closing_time = i.closing_time  # Already in "%I:%M %p" format (e.g., "01:00 AM")
+
+        #     # Handle the case where the shop is open past midnight
+        #     if closing_time < opening_time:
+        #         # Shop is open past midnight (e.g., Tuesday 7 PM to 1 AM)
+        #         if now >= opening_time or now < closing_time:
+        #             is_open = True
+        #             break
+        #     else:
+        #         # Normal case (e.g., Tuesday 9 AM to 5 PM)
+        #         if opening_time <= now < closing_time:
+        #             is_open = True
+        #             break
+
+        #     # If neither condition is met, the shop is closed
+        #     is_open = False
+
+        # return is_open
 
     def is_open(self):
-        # Check current day's opening hours
+        #Check current days opening hours
         today_date = date.today()
         today = today_date.isoweekday()
 
         current_opening_hours = OpeningHours.objects.filter(vendor=self, day=today)
-        now = datetime.now().strftime("%I:%M %p")  # Convert current time to string (e.g., "07:00 PM")
+        now = datetime.now()
+        current_time = now.strftime('%H:%M:%S')
 
         is_open = None
         for i in current_opening_hours:
-            # Extract opening and closing times as strings
-            opening_time = i.opening_time  # Already in "%I:%M %p" format (e.g., "07:00 PM")
-            closing_time = i.closing_time  # Already in "%I:%M %p" format (e.g., "01:00 AM")
-
-            # Handle the case where the shop is open past midnight
-            if closing_time < opening_time:
-                # Shop is open past midnight (e.g., Tuesday 7 PM to 1 AM)
-                if now >= opening_time or now < closing_time:
+            if not i.is_closed:
+                start = str(datetime.strptime(i.opening_time, "%I:%M %p").time())
+                end = str(datetime.strptime(i.closing_time, "%I:%M %p").time())
+                if current_time > start and current_time < end:
                     is_open = True
                     break
-            else:
-                # Normal case (e.g., Tuesday 9 AM to 5 PM)
-                if opening_time <= now < closing_time:
-                    is_open = True
-                    break
-
-            # If neither condition is met, the shop is closed
-            is_open = False
-
-        return is_open
+                else:
+                    is_open = False
+            return is_open
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
