@@ -27,14 +27,14 @@
                                             <figure>
                                                 <a href="#">
                                                     {% if vendor.user_profile.profile_picture %}
-                                                    <img src="{{vendor.user_profile.profile_picture.url}}" class="img-list wp-post-image" alt="{{vendor.vendor_name}}">
+                                                        <img src="{{vendor.user_profile.profile_picture.url}}" class="img-list wp-post-image" alt="{{vendor.vendor_name}}">
                                                     {% else %}
-                                                    <img src="{% static 'images/default-profile.png' %}" class="img-list wp-post-image" alt="Default Profile Image">
+                                                        <img src="{% static 'images/default-profile.png' %}" class="img-list wp-post-image" alt="Default Profile Image">
                                                     {% endif %}
                                                 </a>
 
                                             </figure>
-                                            {% if vendor.is_open%}
+                                        {% if vendor.is_open %}
 										<span class="restaurant-status open">
 											<em class="bookmarkRibbon"></em>Open
 										</span>
@@ -74,7 +74,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="section-sidebar col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                        <div class="section-sidebar col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-top: 3.7%;">
                             <div class="message-box position-fixed mr-3" style="background-color: #fa9918;">
                                 <strong>I'm not Listed!</strong>
                                 <span>Is your restaurant or
