@@ -4,36 +4,7 @@
 
 	<!-- Main Section Start -->
     <div class="main-section">
-        <div class="page-section restaurant-detail-image-section" style=" background: url({% static 'extra-images/banner-img-2.jpg' %}) no-repeat scroll 0 0 / cover;">
-            <!-- Container Start -->
-            <div class="container">
-                <!-- Row Start -->
-                <div class="row">
-                    <!-- Column Start -->
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="company-info-detail">
-                            <div class="company-info">
-                                <div class="img-holder">
-                                    <figure>
-                                        <img src="{% static 'extra-images/team-medium-img1.jpg' %}" alt="">
-                                    </figure>
-                                </div>
-                                <div class="text-holder">
-                                    <span class="restaurant-title">{{user.first_name}} {{user.last_name}}</span>
-                                    <ul class="user-info-contact">
-                                        <li class="cell"><i class="icon-phone"></i><a href="tel:0123456789">012 3456 789</a></li>
-                                        <li class="email"><i class="icon-mail5"></i><a href="mailto:dum4@chimpgroup.com">dum4@chimpgroup.com</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Column End -->
-                </div>
-                <!-- Row End -->
-            </div>
-            <!-- Container End -->
-        </div>
+        {% include 'customers/cover.html' %}
         <div class="page-section account-header buyer-logged-in">
             <div class="container">
                 <div class="row">
@@ -61,7 +32,7 @@
                                                     <div class="suggest-list-holder">
                                                         <div class="img-holder">
                                                             <figure>
-                                                                <a href="listings.html"><img src="assets/extra-images/fb-restaurant-06.jpg" alt=""> </a>
+                                                                <a href="listings.html"><img src="{% static 'extra-images/fb-restaurant-06.jpg' %}" alt=""> </a>
                                                             </figure>
                                                         </div>
                                                         <div class="text-holder">
@@ -95,7 +66,7 @@
                                                     <div class="suggest-list-holder">
                                                         <div class="img-holder">
                                                             <figure>
-                                                                <a href="listings.html"><img src="assets/extra-images/listing-logo18.png" alt=""> </a>
+                                                                <a href="listings.html"><img src="{% static 'extra-images/listing-logo18.png' %}" alt=""> </a>
                                                             </figure>
                                                         </div>
                                                         <div class="text-holder">
@@ -128,7 +99,7 @@
                                                 <li>
                                                     <div class="img-holder">
                                                         <figure>
-                                                            <a href="#"> <img src="assets/extra-images/fb-restaurant-01.jpg" class="img-list wp-post-image" alt=""> </a>
+                                                            <a href="#"> <img src="{% static 'extra-images/fb-restaurant-01.jpg' %}" class="img-list wp-post-image" alt=""> </a>
                                                         </figure>
                                                     </div>
                                                     <div class="text-holder">
@@ -170,7 +141,7 @@
                                                 <li>
                                                     <div class="img-holder">
                                                         <figure>
-                                                            <a href="#"><img src="assets/extra-images/fb-restaurant-04.jpg" class="img-list wp-post-image" alt=""> </a>
+                                                            <a href="#"><img src="{% static 'extra-images/fb-restaurant-04.jpg' %}" class="img-list wp-post-image" alt=""> </a>
                                                         </figure>
                                                     </div>
                                                     <div class="text-holder">
@@ -218,7 +189,7 @@
                                                 <li>
                                                     <div class="img-holder">
                                                         <figure>
-                                                            <a href="#"><img src="assets/extra-images/xlisting-logo03.png.pagespeed.ic_.aT-o9LinEJ.png" class="img-list wp-post-image" alt=""> </a>
+                                                            <a href="#"><img src="{% static 'extra-images/xlisting-logo03.png.pagespeed.ic_.aT-o9LinEJ.png' %}" class="img-list wp-post-image" alt=""> </a>
                                                         </figure>
                                                     </div>
                                                     <div class="text-holder">
@@ -260,7 +231,7 @@
                                                 <li>
                                                     <div class="img-holder">
                                                         <figure>
-                                                            <a href="#"><img src="assets/extra-images/fb-restaurant-09.png" class="img-list wp-post-image" alt=""> </a>
+                                                            <a href="#"><img src="{% static 'extra-images/fb-restaurant-09.png' %}" class="img-list wp-post-image" alt=""> </a>
                                                         </figure>
                                                     </div>
                                                     <div class="text-holder">
