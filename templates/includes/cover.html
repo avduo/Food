@@ -11,9 +11,9 @@
                         <div class="img-holder">
                             <figure>
                                 {% if vendor.user_profile.profile_picture %}
-                                <img src="{{vendor.user_profile.profile_picture.url}}" alt="{{vendor.vendor_name}}">
+                                    <img src="{{vendor.user_profile.profile_picture.url}}" alt="{{vendor.vendor_name}}">
                                 {% else %}
-                                <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Image">
+                                    <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Image">
                                 {% endif %}
                             </figure>
                         </div>
