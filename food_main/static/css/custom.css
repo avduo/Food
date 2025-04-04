@@ -84,3 +84,34 @@ table > tbody > tr > td {
     left: 5px;
 
 }
+
+/* Payment method hide radio buttons */
+.payment-method [type=radio] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Payment method image styles */
+.payment-method [type=radio] + img {
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* Payment method image checked styles */
+.payment-method [type=radio]:checked + img {
+    outline: 2px solid #ff0000;
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .center-on-mobile.col-sm-12 {
+      text-align: center; /* For inline elements */
+    }
+}
+
+@media (max-width: 575.98px) {
+    .center-on-mobile.col-xs-12 {
+      text-align: center; /* For inline elements */
+    }
+}

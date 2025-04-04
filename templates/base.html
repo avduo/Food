@@ -38,9 +38,35 @@
 	<script src="{% static 'js/modernizr.js' %}"defer></script>
 	<script src="{% static 'js/bootstrap.js' %}"defer></script>
 
-	{% if 'profile' in request.path or request.path == '/' %}
+	{% if 'profile' in request.path or 'checkout' in request.path or request.path == '/' %}
 	<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&callback=initAutoComplete" async defer></script>
 	{% endif %}
+
+	{% if 'checkout' in request.path %}
+	<script>
+		function payMethodConfirm(){
+			var payMethed = $ ("input[name='payment-method']:checked").val();
+			if(!payMethed){
+				$('#payment-method-error').html("Please select a payment method!")
+				return false;
+			}else{
+				var conf = confirm('You have selected' + payMethed + ' as your payment method. \nClick "OK" to continue.');
+				if(conf == True){
+					return True;
+				}else{
+					return False;
+				}
+			}
+		}
+
+		$(function() {
+			$('input[name="payment-method"]').change(function() {
+			  $('#payment-method-error').html('');
+			});
+		  });
+	</script>
+	{% endif %}
+
 	<script src="{% static 'js/custom.js' %}" defer></script>
 
 	<style>
