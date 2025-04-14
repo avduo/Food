@@ -80,6 +80,7 @@ class Vendor(models.Model):
                         'user' : self.user,
                         'is_verified' : self.is_verified,
                         'vendor_name': self.vendor_name,
+                        'to_email' : self.user.email,
 
                     }
                 if self.is_verified == True:

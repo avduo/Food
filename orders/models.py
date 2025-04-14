@@ -37,6 +37,7 @@ class Order(models.Model):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     post_code = models.CharField(max_length=10)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2,  null=True, blank=True)
     country = models.CharField(max_length=100, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     tax_data = models.JSONField(blank=True, help_text="Data format: {'tax_type':{'tax_percent':'tax_amount'}}")

@@ -28,18 +28,22 @@ def send_verification_email(request, user, mail_subject, email_template):
         'token': default_token_generator.make_token(user),
     })
     to_email = user.email
-    mail = EmailMessage(mail_subject, message, to=[to_email] ) # Use 'to' instead of '[to_email]'
-    mail.content_subtype = 'html'  # Set the content type to HTML if your template is HTML
+    mail = EmailMessage(mail_subject, message, from_email, to=[to_email] )
+    mail.content_subtype = 'html'
     mail.send()
 
 def send_notification_email(mail_subject, email_template, context):
+    #print(f"FINAL CHECK - Sending to: {context['to_email']}")
     from_email = settings.DEFAULT_FROM_EMAIL
     #current_site = get_current_site(request)
-    message = render_to_string(email_template, context, #{
-        #'domain': str(current_site),
-    #}
-    )
-    to_email = context['user'].email
-    mail = EmailMessage(mail_subject, message, to=[to_email] )
-    mail.content_subtype = 'html'  # Set the content type to HTML if your template is HTML
-    mail.send()
+    message = render_to_string(email_template, context)
+    to_email = context['to_email']
+    # Handle both single email (str) and multiple emails (list)
+    if (isinstance(context['to_email'], str)):
+        to_email = []
+        to_email.append(context['to_email'])
+    else:
+        to_email = context['to_email']
+        mail = EmailMessage(mail_subject, message, from_email, to=to_email)
+        mail.content_subtype = 'html'
+        mail.send()

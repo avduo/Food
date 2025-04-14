@@ -1,6 +1,18 @@
 from django.contrib import admin
 from .models import Payment, Order, OrderedProduct
 
+class OrderedProductInline(admin.TabularInline):
+    model = OrderedProduct
+    readonly_fields = ['payment', 'user', 'product_item', 'quantity', 'price', 'total_price']
+    extra = 0
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderedProductInline]
+    list_display = ['order_number', 'first_name', 'last_name', 'phone', 'email', 'post_code', 'total', 'total_tax', 'payment_method', 'status', 'is_ordered', 'ordered_at']
+    list_filter = ['status', 'payment_method']
+    search_fields = ['order_number', 'first_name', 'last_name', 'phone', 'email', 'post_code', 'country']
+    date_hierarchy = 'ordered_at'
+
 admin.site.register(Payment)
-admin.site.register(Order)
-admin.site.register(OrderedProduct)
+admin.site.register(Order, OrderAdmin)
+# admin.site.register(OrderedProduct)

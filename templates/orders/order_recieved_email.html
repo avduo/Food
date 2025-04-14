@@ -1,0 +1,68 @@
+{% autoescape off %}
+<html>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
+    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px;">
+        <h2 style="color: #2c3e50; margin-top: 0;">New Order Notification</h2>
+
+        <p>Hello <strong>{{ vendor.vendor_name }}</strong>,</p>
+
+        <p>You have received a new order <strong>#{{ order.order_number }}</strong>.</p>
+        <p style="color: #27ae60; font-weight: bold;">✓ Payment confirmed</p>
+
+        <p>
+            {% if ordered_products|length == 1 %}
+            The product in this order is:
+            {% else %}
+            The products in this order are:
+            {% endif %}
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <thead>
+                <tr style="background-color: #2c3e50; color: white;">
+                    <th style="padding: 10px; text-align: left;">Product</th>
+                    <th style="padding: 10px; text-align: center;">Qty</th>
+                    <th style="padding: 10px; text-align: right;">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in ordered_products %}
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px;">
+                        <b>{{ item.product_item }}</b>
+                    </td>
+                    <td style="padding: 10px; text-align: center;">{{ item.quantity }}</td>
+                    <td style="padding: 10px; text-align: right; white-space: nowrap;">{{ item.product_item.price }} €</td>
+                </tr>
+                {% endfor %}
+                <!-- Optional: Add totals row -->
+                {% comment %} <tr>
+                    <td colspan="2" style="padding: 10px; text-align: right;">Sub Total:</td>
+                    <td style="padding: 10px; text-align: right; white-space: nowrap;">{{ order.subtotal }} €</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 10px; text-align: right;">TVA:</td>
+                    <td style="padding: 10px; text-align: right; white-space: nowrap;">{{ order.total_tax }} €</td>
+                </tr>
+                <tr style="font-weight: bold;">
+                    <td colspan="2" style="padding: 10px; text-align: right;">Total:</td>
+                    <td style="padding: 10px; text-align: right; white-space: nowrap;">{{ order.total }} €</td>
+                </tr> {% endcomment %}
+            </tbody>
+        </table>
+
+        <p>Thank you for choosing FoodOnline Marketplace. We look forward to working with you again soon.</p>
+
+        <p style="margin-top: 30px;">
+            Kind Regards,<br>
+            <strong>FoodOnline Marketplace Team</strong>
+        </p>
+
+        <p style="font-size: 12px; color: #777; margin-top: 20px;">
+            Order Date: {{ order.payment.created_at|date:"F j, Y" }}<br>
+            Order #: {{ order.order_number }}
+        </p>
+    </div>
+</body>
+</html>
+{% endautoescape %}

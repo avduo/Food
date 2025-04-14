@@ -78,6 +78,7 @@ TEMPLATES = [
                 'marketplace.context_processors.get_cart_counter',
                 'marketplace.context_processors.get_cart_amounts',
                 'accounts.context_processors.get_user_profile',
+                'accounts.context_processors.get_paypal_client_id',
             ],
         },
     },
@@ -176,6 +177,11 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='EMAIL_HOST_USER')
 PASSWORD_RESET_TIMEOUT = 900 # 15 mins
 
 GOOGLE_API_KEY = config('GOOGLE_MAP_KEY')
+
+PAYPAL_CLIENT_ID =config('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_KEY=config('PAYPAL_SECRET_KEY')
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 os.environ['PATH'] = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
 os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']

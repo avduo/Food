@@ -6,7 +6,7 @@
     <div class="page-section">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
                     <div class="tabs-holder horizontal">
                         <ul class="stickynav-tabs nav nav-tabs">
                             <li class="active"><a data-toggle="tab"><i class="icon- icon-house"></i>Confirm Billing Address</a></li>
@@ -14,9 +14,20 @@
                         </ul>
                         <div class="tab-content">
                             <div id="home" class="tab-pane in active">
-                                <div class="menu-itam-holder">
+                                <div class="menu-itam-holder pb-3">
                                     <div id="menu-item-list-6272" class="menu-itam-list">
+                                        <div class="billing-address">
+                                            <div><b>{{ order.name }}</b></div>
+                                            <div>{{ order.address }}</div>
+                                            <div>{{ order.city }} - {{ order.post_code }}</div>
+                                            <div>{{ order.state }} - {{ order.country }}</div>
+                                            <div><b>Phone: </b>{{ order.phone }}</div>
+                                            <div><b>Email: </b>{{ order.email }}</div>
+                                            <div><b>Payment: </b>{{ order.payment_method }}</div>
+                                            <br>
+                                            <div><a href="{% url 'checkout' %}" class="btn btn-outline-danger">Edit</a></div>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -25,7 +36,7 @@
                     </div>
                 </div>
                 <!--Your order section-->
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
                     <div class="tabs-holder horizontal">
                         <ul class="stickynav-tabs nav nav-tabs">
                             <li class="active"><a data-toggle="tab"><i class="icon- icon-room_service"></i>Total</a></li>
@@ -35,6 +46,24 @@
                             <div id="home" class="tab-pane in active">
                                 <div class="menu-itam-holder">
                                     <div>
+                                        <table class="table">
+                                            <tbody>
+                                                {% for item in cart_items %}
+                                                <tr class="cart_img">
+                                                    <td class="image-td">
+                                                        <img class="cart-image" src="{{ item.product_item.image.url }}" alt="{{ item.product_item }}">
+                                                    </td>
+                                                    <td class="no-center-align float-left">
+                                                        <div class="pb-2"><b>{{ item.product_item }}</b></div>
+                                                        <div><a class="badge badge-warning">{{ item.product_item.vendor.vendor_name }}</a></div>
+                                                    </td>
+                                                    <td>{{ item.quantity }}</td>
+                                                    <td><span class="price float-right">{{ item.product_item.price }} €</span></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+
                                         <ul class="pb-3">
                                             <li style="list-style-type: none;" >
                                                 Subtotal
@@ -61,7 +90,10 @@
                                                     <span class="currency">€</span>
                                                 </span>
                                             </li>
-                                            <a href="{% url 'checkout' %}" class="btn btn-danger w-100 p-2 mt-3">PROCEED TO CHECKOUT</a>
+                                            <!-- PAYPAL checkout button -->
+                                            <div id="paypal-button-container"></div>
+
+                                            {% comment %} <a href="{% url 'checkout' %}" class="btn btn-danger w-100 p-2 mt-3">PROCEED TO CHECKOUT</a> {% endcomment %}
                                         </ul>
                                     </div>
                                 </div>
