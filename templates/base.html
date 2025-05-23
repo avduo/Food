@@ -42,123 +42,43 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&callback=initAutoComplete" async defer></script>
 	{% endif %}
 
-	{% if 'checkout' in request.path %}
-	<script>
-		function payMethodConfirm(){
-			var payMethod = $ ("input[name='payment-method']:checked").val();
-			if(!payMethod){
-				$('#payment-method-error').html("Please select a payment method!")
-				return false;
-			}else{
-				var conf = confirm('You have selected ' + payMethod + ' as your payment method. \nClick "OK" to continue.');
-				if(conf == true){
-					return true;
-				}else{
-					return false;
-				}
-			}
-		}
+	{% comment %} {% if 'checkout' in request.path %}
+	<script src="{% static 'js/pay-method.js' %}"></script>
+	{% endif %} {% endcomment %}
 
-		$(function() {
-			$('input[name="payment-method"]').change(function() {
-			  $('#payment-method-error').html('');
-			});
-		  });
-	</script>
-	{% endif %}
-	 <!-- Include the PayPal JavaScript SDK -->
-	 {% if 'place-order' in request.path %}
-	<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=EUR"></script>
-	<script>
-		function getCookie(name) {
-			let cookieValue = null;
-			if (document.cookie && document.cookie !== '') {
-				const cookies = document.cookie.split(';');
-				for (let i = 0; i < cookies.length; i++) {
-					const cookie = cookies[i].trim();
-					// Does this cookie begin with the name we want?
-					if (cookie.substring(0, name.length + 1) === (name + '=')) {
-						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-						break;
-					}
-				}
-			}
-			return cookieValue;
-		}
-
-		var grand_total = "{{ grand_total }}"
-		var url = "{% url 'payments' %}"
-		var order_number = "{{ order.order_number }}"
-		const csrftoken = getCookie('csrftoken');
-		var order_complete = "{% url 'order_complete' %}"
-		//console.log('csrftoken===>', csrftoken);
-
-		// Render the PayPal button into #paypal-button-container
-		paypal.Buttons({
-
-			// Call your server to set up the transaction
-			createOrder: function(data, actions) {
-				return actions.order.create({
-					purchase_units: [{
-						amount:{
-							value: grand_total
-						}
-					}]
-				})
-			},
-
-			// Call your server to finalize the transaction
-			onApprove: function(data, actions) {
-				return actions.order.capture().then(function(orderData){
-
-					// Successful capture! For demo purposes:
-					//console.log(orderData);
-					var transaction = orderData.purchase_units[0].payments.captures[0];
-					var transaction_id = transaction.id
-					var status = orderData.status
-					var payment_method = 'PayPal'
-					sendTransaction(transaction_id, status, payment_method);
-
-					//alert('Payment Successful');
-
-					// Replace the above to show a success message within this page, e.g.
-					 const element = document.getElementById('paypal-button-container');
-					 element.innerHTML = '';
-					 element.innerHTML = '<h4 class="text-center text-warning"><i class="fa fa-spinner fa-spin"></i> Please wait your payment is being processed</h4>';
-					// Or go to another URL:  actions.redirect('thank_you.html');
-				});
-			}
-
-		}).render('#paypal-button-container');
-
-		//send the data to payments view
-		function sendTransaction(transaction_id, status, payment_method){
-			$.ajax({
-				url: url,
-				type: 'POST',
-				data: {
-					'order_number': order_number,
-					'transaction_id': transaction_id,
-					'status': status,
-					'payment_method': payment_method,
-					'csrfmiddlewaretoken': csrftoken,
-				},
-				success: function(response){
-					console.log('response===>', response);
-					window.location.href = order_complete +'?order_no='+response.order_number+'&trans_id='+response.transaction_id;
-				}
-			});
-		}
-	</script>
+	<!-- Include the PayPal JavaScript SDK -->
+	{% if 'place-order' in request.path %}
+		<script src="{% static 'js/get-csrf.js' %}"></script>
+		<script>
+			window.paymentData = {
+				url: "{% url 'payments' %}",
+				order_number: "{{ order.order_number }}",
+				order_complete: "{% url 'order_complete' %}",
+		};
+		</script>
+		<script src="{% static 'js/payment-redirect.js' %}"></script>
+		{% if order.payment_method == 'PayPal' %}
+			<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=EUR"></script>
+			<script>
+				window.paypalData = {
+					grand_total: parseFloat("{{ grand_total }}"),
+				};
+			</script>
+			<script src="{% static 'js/paypal-integration.js' %}"></script>
+		{% elif order.payment_method == 'Stripe' %}
+			<script src="https://js.stripe.com/v3/"></script>
+			<script>
+				window.stripeData = {
+				  publicKey: '{{ STRIPE_PUBLIC_KEY }}',
+				  createSessionUrl: '{% url "create-stripe-session" %}',
+				  csrfToken: '{{ csrf_token }}'
+				};
+			  </script>
+			<script src="{% static 'js/stripe-integration.js' %}"></script>
+		{% endif %}
 	{% endif %}
 
 	<script src="{% static 'js/custom.js' %}" defer></script>
-
-	<style>
-		body, .main-section p, .mce-content-body p{
-			font:Normal  14px/24px "Open Sans", sans-serif;letter-spacing: 0px;text-transform: none;color: #515151 !important;
-		}
-	</style>
 </head>
 
 <body>

@@ -16,7 +16,10 @@
             <p style="margin: 0;">
                 <strong>Payment Method:</strong> {{ order.payment_method }}<br>
                 <strong>Amount Paid:</strong> {{ order.payment.amount }} €<br>
-                <strong>Transaction ID:</strong> {{ order.payment.transaction_id }}
+                {% comment %} <strong>Transaction ID:</strong> {{ order.payment.transaction_id }} {% endcomment %}
+                <strong>Transaction ID:</strong><span style="overflow-wrap: anywhere; word-break: break-word; display: inline-block;">
+                    {{ order.payment.transaction_id }}
+                </span>
                 <p style="color: #27ae60; font-weight: bold;">✓ Payment confirmed</p>
             </p>
         </div>

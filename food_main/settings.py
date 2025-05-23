@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'stripe',
+    'django_extensions',
 
     'accounts',
     'vendor',
@@ -127,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
@@ -161,6 +163,7 @@ MESSAGE_TAGS = {
 # Get the domain from an environment variable or set a default
 #SITE_DOMAIN = os.environ.get('MY_SITE_DOMAIN', 'example.com')
 
+SITE_DOMAIN = "http://127.0.0.1:8000" # Replace with your actual domain URL
 # Site Config
 SITE_ID = 1
 
@@ -178,11 +181,68 @@ PASSWORD_RESET_TIMEOUT = 900 # 15 mins
 
 GOOGLE_API_KEY = config('GOOGLE_MAP_KEY')
 
-PAYPAL_CLIENT_ID =config('PAYPAL_CLIENT_ID')
-PAYPAL_SECRET_KEY=config('PAYPAL_SECRET_KEY')
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_KEY = config('PAYPAL_SECRET_KEY')
+
+# Stripe settings
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')  # for handling payment events
+
+# Set your currency
+STRIPE_CURRENCY = 'eur'
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
+
+# For both Stripe and PayPal
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# For production (HTTPS only)
+if not DEBUG:
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = 'None'
+    # CSRF_TRUSTED_ORIGINS = ['https://yourdomain.com']
 
 os.environ['PATH'] = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
 os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
 GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, 'env\Lib\site-packages\osgeo\gdal.dll')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} - {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        # Django default logs
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        # Your app logs
+        'orders': {  # ⚠️ change this to your app name, e.g. 'myapp'
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}
+

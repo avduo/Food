@@ -115,3 +115,26 @@ table > tbody > tr > td {
       text-align: center; /* For inline elements */
     }
 }
+
+body, .main-section p, .mce-content-body p{
+    font:Normal  14px/24px "Open Sans", sans-serif;
+    letter-spacing: 0px;
+    text-transform: none;
+    color: #515151 !important;
+}
+
+.forgot-button{
+    line-height: 28px;
+    position: relative;
+    background: #ffc107;
+    border: 0 none;
+    border-radius: 2px;
+    color: #fff;
+    display: inline-block;
+    font-family: "Karla", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    margin: 0;
+    outline: none;
+    padding: 2px 25px;
+}

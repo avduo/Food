@@ -100,7 +100,24 @@
                                                     <span class="currency">€</span>
                                                 </span>
                                             </li>
-                                            <a href="{% url 'checkout' %}" class="btn btn-danger w-100 p-2 mt-3">PROCEED TO CHECKOUT</a>
+                                            {% if request.GET.payment_success == 'stripe' %}
+                                                <div id="payment-overlay">
+                                                    <div class="spinner">Processing payment...</div>
+                                                </div>
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                        const urlParams = new URLSearchParams(window.location.search);
+                                                        const sessionId = urlParams.get('session_id');
+                                                        const success = urlParams.get('payment_success');
+
+                                                        if (success === 'stripe' && sessionId) {
+                                                            sendTransaction(sessionId, 'Completed', 'Stripe');
+                                                        }
+                                                    });
+                                                </script>
+                                                {% else %}
+                                                 <a href="{% url 'checkout' %}" class="btn btn-danger w-100 p-2 mt-3">PROCEED TO CHECKOUT</a>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </div>

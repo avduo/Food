@@ -83,16 +83,20 @@
                                                     </li>
                                                     {%  endfor %}
                                             {%  endfor %}
-                                            <li style="list-style-type: none; font-weight: 600;" >
-                                                Total
-                                                <span class="price float-right">
-                                                    <span id="total">{{ grand_total}}</span>
-                                                    <span class="currency">€</span>
-                                                </span>
-                                            </li>
+                                                <li style="list-style-type: none; font-weight: 600;" >
+                                                    Total
+                                                    <span class="price float-right">
+                                                        <span id="total">{{ grand_total}}</span>
+                                                        <span class="currency">€</span>
+                                                    </span>
+                                                </li>
+                                            {% if order.payment_method == 'PayPal' %}
                                             <!-- PAYPAL checkout button -->
-                                            <div id="paypal-button-container"></div>
-
+                                                <div id="paypal-button-container"></div>
+                                            {% elif order.payment_method == 'Stripe' %}
+                                            <button id="stripe-payment-button" onclick="startStripeCheckout()"class="btn bg-warning rounded text-black w-100 p-2 mt-3">Pay With Stripe <i class="fas fa-credit-card ms-1"></i>
+                                            </button>
+                                            {% endif %}
                                             {% comment %} <a href="{% url 'checkout' %}" class="btn btn-danger w-100 p-2 mt-3">PROCEED TO CHECKOUT</a> {% endcomment %}
                                         </ul>
                                     </div>

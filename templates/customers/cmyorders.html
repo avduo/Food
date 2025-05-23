@@ -15,35 +15,6 @@
                     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                         <div class="user-dashboard">
                             <div class="user-holder">
-                                <div id="close-me" class="user-message" style="background-color:#1e73be;">
-                                    <a class="close close-div" href="#"><i class="icon-cross-out"></i></a>
-                                    <h2>Welcome to your account {{user.first_name}}</h2>
-                                    <p>My Account gives you quick access to settings and tools for managing your Account like <a href="{% url 'cprofile' %}">Change address</a> and <a href="{% url 'forgotPassword' %}">Change password</a> . You can [manage Orders] Booking, and access even more [Shortlists] and [Statements] and may more.</p>
-                                </div>
-                                <h5 class="text-uppercase">Overview</h5>
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mb-2">
-                                        <div class="card">
-                                            <div class="card-header text-center">
-                                                Total Orders
-                                            </div>
-                                            <div class="card-body text-center">
-                                                <a href="#"><h5 class="card-title">{{ orders_count }}</h5></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 mb-2">
-                                        <div class="card">
-                                            <div class="card-header text-center">
-                                                Logged in as: <b>{{ user.email}}</b> <a href="{% url 'logout' %}">Logout</a>
-                                            </div>
-                                            <div class="card-body text-center">
-                                                <a href="{% url 'cprofile' %}"><h5 class="card-title"><i class=" fa fa-edit"></i> Edit Profile</h5></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
                                 <h5 class="text-uppercase">Recent Orders</h5>
                                 <div class="row">
                                     <div class="col-lg12 col-md-12 col-sm-12 col-xs-12">
@@ -61,9 +32,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {%  for order in recent_orders %}
+                                                    {%  for order in orders %}
                                                     <tr>
-                                                        <td><b><a href="{% url 'order_detail' order.order_number %}" class="text-dark">{{ order.order_number }}</a></b></td>
+                                                    <td><b><a href="{% url 'order_detail' order.order_number %}" class="text-dark">{{ order.order_number }}</a></b></td>
                                                     <td>{{ order.payment_method }}</td>
                                                     <td>{{ order.total }} €</td>
                                                     <td>{{ order.status }}</td>

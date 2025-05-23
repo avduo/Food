@@ -1,15 +1,17 @@
 from django.db import models
+
 from accounts.models import User
 from menu.models import ProductItem
 
 class Payment(models.Model):
     PAYMENT_METHOD = (
         ('PayPal', 'PayPal'),
-        ('Razorpay', 'Razorpay'),
+        ('Stripe', 'Stripe'),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     transaction_id = models.CharField(max_length=100)
     payment_method = models.CharField(max_length=30, choices=PAYMENT_METHOD)
+    raw_response = models.JSONField(blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=50, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,6 +27,7 @@ class Order(models.Model):
         ('Shipped', 'Shipped'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
+        ('failed', 'Failed'),
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True)
@@ -43,7 +46,7 @@ class Order(models.Model):
     tax_data = models.JSONField(blank=True, help_text="Data format: {'tax_type':{'tax_percent':'tax_amount'}}")
     total_tax = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.CharField(max_length=25)
-    status = models.CharField(max_length=20, choices=STATUS, default='Pending')
+    status = models.CharField(max_length=20, choices=STATUS, default='Processing')
     is_ordered = models.BooleanField(default=False)
     ordered_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

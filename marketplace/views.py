@@ -1,9 +1,13 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
+import stripe
 
 from accounts.models import UserProfile
 from orders.forms import OrderForm
+from orders.models import Order
 from .context_processors import get_cart_counter, get_cart_amounts
 from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
 
 from vendor.models import Vendor, OpeningHours
 from menu.models import Category, ProductItem

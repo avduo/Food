@@ -136,14 +136,14 @@
                                                 </label>
                                                 &emsp;
                                                 <label>
-                                                    <input type="radio" name="payment-method" value="stripe">
-                                                    <img src="{% static 'images/stripe.png' %}" alt="stripe" width="100">
+                                                    <input type="radio" name="payment-method" value="Stripe">
+                                                    <img src="{% static 'images/stripe.png' %}" alt="Stripe" width="100">
                                                 </label>
                                             </div>
                                             <span class="text-danger" id="payment-method-error"> </span>
 
                                             <!--Payment Method-->
-                                            <button onclick="return payMethodConfirm()" type="submit" class="btn btn-danger w-100 p-2 mt-3">PLACE YOUR ORDER</button>
+                                            <button type="submit" class="btn btn-danger w-100 p-2 mt-3">PLACE YOUR ORDER</button> {% comment %} onclick="return payMethodConfirm()" {% endcomment %}
                                         </ul>
                                     </form>
                                     </div>
