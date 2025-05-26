@@ -138,3 +138,11 @@ body, .main-section p, .mce-content-body p{
     outline: none;
     padding: 2px 25px;
 }
+
+.closed-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

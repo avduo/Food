@@ -15,60 +15,65 @@ class Vendor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateField(auto_now=True)
 
-    # def __str__(self):
-    #     return self.vendor_name
-
-    # def is_open(self):
-    #     # Check current day's opening hours
-    #     today_date = date.today()
-    #     today = today_date.isoweekday()
-
-    #     current_opening_hours = OpeningHours.objects.filter(vendor=self, day=today)
-    #     now = datetime.now().strftime("%I:%M %p")  # Convert current time to string (e.g., "07:00 PM")
-
-        # is_open = None
-        # for i in current_opening_hours:
-        #     # Extract opening and closing times as strings
-        #     opening_time = i.opening_time  # Already in "%I:%M %p" format (e.g., "07:00 PM")
-        #     closing_time = i.closing_time  # Already in "%I:%M %p" format (e.g., "01:00 AM")
-
-        #     # Handle the case where the shop is open past midnight
-        #     if closing_time < opening_time:
-        #         # Shop is open past midnight (e.g., Tuesday 7 PM to 1 AM)
-        #         if now >= opening_time or now < closing_time:
-        #             is_open = True
-        #             break
-        #     else:
-        #         # Normal case (e.g., Tuesday 9 AM to 5 PM)
-        #         if opening_time <= now < closing_time:
-        #             is_open = True
-        #             break
-
-        #     # If neither condition is met, the shop is closed
-        #     is_open = False
-
-        # return is_open
+    def __str__(self):
+        return self.vendor_name
 
     def is_open(self):
-        #Check current days opening hours
-        today_date = date.today()
-        today = today_date.isoweekday()
-
-        current_opening_hours = OpeningHours.objects.filter(vendor=self, day=today)
+        # “now” as a datetime
         now = datetime.now()
-        current_time = now.strftime('%H:%M:%S')
 
-        is_open = None
-        for i in current_opening_hours:
-            if not i.is_closed:
-                start = str(datetime.strptime(i.opening_time, "%I:%M %p").time())
-                end = str(datetime.strptime(i.closing_time, "%I:%M %p").time())
-                if current_time > start and current_time < end:
-                    is_open = True
-                    break
-                else:
-                    is_open = False
-            return is_open
+        # Figure out today and yesterday as ISO weekdays
+        today = now.isoweekday()                    # 1 = Monday … 7 = Sunday
+        yesterday = 7 if today == 1 else today - 1
+
+        # Fetch all records for today and yesterday
+        today_blocks = OpeningHours.objects.filter(vendor=self, day=today)
+        yesterday_blocks = OpeningHours.objects.filter(vendor=self, day=yesterday)
+
+        # If *any* of today’s blocks is explicitly “closed all day”, we’re closed.
+        if today_blocks.filter(is_closed=True).exists():
+            return False
+
+        # Helper to parse your "07:00 PM" strings
+        def parse_time(t_str):
+            return datetime.strptime(t_str, "%I:%M %p").time()
+
+        # Check today’s blocks (including those that spill past midnight)
+        for block in today_blocks:
+            open_t = (block.opening_time or "").strip()
+            close_t =(block.closing_time or "").strip()
+
+
+            # SKIP any blank/malformed slots
+            if not open_t or not close_t:
+                continue
+
+            # Build datetimes on today’s date
+            open_dt  = datetime.combine(now.date(), parse_time(open_t))
+            close_dt = datetime.combine(now.date(), parse_time(close_t))
+
+            # If it really closes next day, add 1 day
+            if close_dt <= open_dt:
+                close_dt += timedelta(days=1)
+
+            if open_dt <= now < close_dt:
+                return True
+
+        # Check yesterday’s overnight-only blocks
+        for block in yesterday_blocks:
+            open_t = parse_time(block.opening_time)
+            close_t = parse_time(block.closing_time)
+
+            # Only treat as overnight if close ≤ open
+            if close_t <= open_t:
+                open_dt  = datetime.combine(now.date() - timedelta(days=1), open_t)
+                close_dt = datetime.combine(now.date(), close_t)
+
+                if open_dt <= now < close_dt:
+                    return True
+
+        # If we never returned True, we’re closed
+        return False
 
     def save(self, *args, **kwargs):
         if self.pk is not None:

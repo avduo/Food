@@ -40,27 +40,42 @@
                                 </div>
                             </div>
                         </div>
-                        {% if opening_hours %}
                         <div class="delivery-timing reviews-sortby">
-                            <ul>
+                        <ul>
+                            <li>
+                            <!-- Always render the clickable header -->
+                            <a href="#" class="reviews-sortby-active">
+                                {% if is_open %}
+                                <span>Today's Opening Time(s):</span><br>
+                                {% for slot in display_current_hours %}
+                                    {{ slot.opening_time }} – {{ slot.closing_time }}<br>
+                                {% endfor %}
+                                {% else %}
+                                <span class="closed-text">Sorry we are currently closed</span>
+                                {% endif %}
+                                <i class="icon-chevron-small-down"></i>
+                            </a>
+
+                            <!-- Always render the dropdown list of all hours -->
+                            <ul class="delivery-dropdown">
+                                {% for hour in opening_hours %}
                                 <li>
-                                    <a href="#" class="reviews-sortby-active">
-                                        <span>Todays Opening Time(s) :</span><br>
-                                        {% for i in current_opening_hours %}
-                                        {%  if i.is_closed %}Closed{% else %} {{ i.opening_time }} - {{ i.closing_time }} {% endif %}<br>
-                                        {% endfor %}
-                                        <i class="icon-chevron-small-down"></i>
+                                    <a href="#">
+                                    <span class="opend-day">{{ hour.get_day_display }}</span>
+                                    <span class="opend-time">
+                                        {% if hour.is_closed %}
+                                        Closed
+                                        {% else %}
+                                        : {{ hour.opening_time }} – {{ hour.closing_time }}
+                                        {% endif %}
+                                    </span>
                                     </a>
-                                    <ul class="delivery-dropdown">
-                                        {% for hour in opening_hours %}
-                                        <li><a href="#"><span class="opend-day">{{ hour }}</span> <span class="opend-time"><small>:</small> {% if hour.is_closed %}Closed{% else %} {{ hour.opening_time }} - {{ hour.closing_time}} {% endif %}
-                                                </span></a></li>
-                                        {% endfor %}
-                                    </ul>
                                 </li>
+                                {% endfor %}
                             </ul>
+                            </li>
+                        </ul>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
                 <!-- Column End -->

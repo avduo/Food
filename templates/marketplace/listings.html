@@ -25,7 +25,7 @@
                                     <li style="line-height: 15px;">
                                         <div class="img-holder">
                                             <figure>
-                                                <a href="#">
+                                                <a href="{% url 'vendor_detail' vendor.vendor_slug %}">
                                                     {% if vendor.user_profile.profile_picture %}
                                                         <img src="{{vendor.user_profile.profile_picture.url}}" class="img-list wp-post-image" alt="{{vendor.vendor_name}}">
                                                     {% else %}

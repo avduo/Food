@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 import stripe
 
 from accounts.models import UserProfile
+from marketplace.utils import get_current_opening_slots
 from orders.forms import OrderForm
 from orders.models import Order
 from .context_processors import get_cart_counter, get_cart_amounts
@@ -20,16 +21,20 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
 
-from datetime import date, datetime
+from .utils import get_current_opening_slots
 
 def marketplace(request):
     vendors = Vendor.objects.filter(is_verified=True, user__is_active=True)
+    for vendor in vendors:
+        # annotate each vendor with a boolean is_open
+        vendor.is_open = bool(get_current_opening_slots(vendor))
     vendor_count = vendors.count()
     context = {
-        'vendors' : vendors,
+        'vendors': vendors,
         'vendor_count': vendor_count,
     }
     return render(request, 'marketplace/listings.html', context)
+
 
 def vendor_detail(request, vendor_slug):
     vendor = get_object_or_404(Vendor, vendor_slug=vendor_slug)
@@ -40,37 +45,22 @@ def vendor_detail(request, vendor_slug):
         )
     )
 
-    opening_hours = OpeningHours.objects.filter(vendor=vendor).order_by('day', '-opening_time')
-    #Check current day opening hours
-    today_date = date.today()
-    today = today_date.isoweekday()
-
-    current_opening_hours = OpeningHours.objects.filter(vendor=vendor, day=today)
-    now = datetime.now()
-    current_time = now.strftime('%H:%M:%S')
-
-    is_open = None
-    for i in current_opening_hours:
-        if not i.is_closed:
-            start = str(datetime.strptime(i.opening_time, "%I:%M %p").time())
-            end = str(datetime.strptime(i.closing_time, "%I:%M %p").time())
-            if current_time > start and current_time < end:
-                is_open = True
-                break
-            else:
-                is_open = False
-
     if  request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
     else:
         cart_items = None
 
+    vendor.is_open = get_current_opening_slots(vendor)
+
+    display_current_hours = get_current_opening_slots(vendor)
+    is_open               = bool(display_current_hours)
+
     context = {
         'vendor': vendor,
         'categories': categories,
         'cart_items': cart_items,
-        'opening_hours': opening_hours,
-        'current_opening_hours': current_opening_hours,
+        'opening_hours': OpeningHours.objects.filter(vendor=vendor).order_by('day','-opening_time'),
+        'display_current_hours': display_current_hours,
         'is_open': is_open,
     }
     return render(request, 'marketplace/vendor_detail.html', context)
