@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'accounts',
+    #'accounts.apps.AccountsConfig',
     'vendor',
     'menu',
     'marketplace',
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'orders.request_object.RequestObjectMiddleware', # custom middleware for request object
     #'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ]
 
@@ -67,7 +69,7 @@ ROOT_URLCONF = 'food_main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

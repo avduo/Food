@@ -82,17 +82,17 @@
                                                     <span class="currency">€</span>
                                                 </span>
                                             </li>
-                                            {% for key, value in tax_dict.items %}
-                                                {% for i, j in value.items %}
-                                                    <li style="list-style-type: none;" >
-                                                        {{ key }} <small>({{ i }}%)</small>
-                                                        <span class="price float-right">
-                                                            <span id="tax-{{ key }}">{{ j }}</span>
-                                                            <span class="currency">€</span>
-                                                        </span>
-                                                    </li>
-                                                    {%  endfor %}
-                                            {%  endfor %}
+                                                {% for key, value in tax_dict.items %}
+                                                    {% for i, j in value.items %}
+                                                        <li style="list-style-type: none;" >
+                                                            {{ key }} <small>({{ i }}%)</small>
+                                                            <span class="price float-right">
+                                                                <span id="tax-{{ key }}">{{ j }}</span>
+                                                                <span class="currency">€</span>
+                                                            </span>
+                                                        </li>
+                                                        {%  endfor %}
+                                                {%  endfor %}
                                             <li style="list-style-type: none; font-weight: 600;" >
                                                 Total
                                                 <span class="price float-right">

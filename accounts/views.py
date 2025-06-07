@@ -1,8 +1,10 @@
+import datetime
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from orders.models import Order
 from vendor.forms import VendorForm
+from vendor.models import Vendor
 from .forms import UserForm
 from .models import User, UserProfile
 from django.contrib import messages, auth
@@ -35,7 +37,7 @@ def registerUser(request):
         messages.warning(request, 'You are already logged in!')
         return redirect('myAccount')
     elif request.method == 'POST':
-        print(request.POST)
+        #print(request.POST)
         form = UserForm(request.POST)
         if form.is_valid():
             #password = form.cleaned_data['password']
@@ -57,7 +59,7 @@ def registerUser(request):
             mail_subject = 'Please activate your new account'
             email_template = 'accounts/emails/accounts_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template)
-            print('User is created from create_user')
+            #print('User is created from create_user')
             messages.success(request, 'Your account has been created sucessfuly!')
             return redirect('registerUser')
         else:
@@ -78,14 +80,14 @@ def registerVendor(request):
         # store the data and create vendor
         form = UserForm(request.POST)
         v_form = VendorForm(request.POST, request.FILES)
-        if form.is_valid() and v_form.is_valid:
+        if form.is_valid() and v_form.is_valid():
             # Creating the Vendor user
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
-            passsword = form.cleaned_data['password']
-            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=passsword)
+            password = form.cleaned_data['password']
+            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
             user.role = User.VENDOR
             user.save()
             vendor = v_form.save(commit=False)
@@ -99,7 +101,7 @@ def registerVendor(request):
             mail_subject = 'Please activate your new vendor account'
             email_template = 'accounts/emails/accounts_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template)
-            print('Restaurant is created from create_vendor')
+            # print('Restaurant is created from create_vendor')
             messages.success(request, 'Your Restaurant account has been created and will be approved in 48hrs ')
             return redirect('registerVendor')
         else:
@@ -116,7 +118,7 @@ def registerVendor(request):
     return render(request, 'accounts/registerVendor.html', context)
 
 def activate(request, uidb64, token):
-    # Activate the user by stting the is_active status to true
+    # Activate the user by setting the is_active status to true
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User._default_manager.get(pk=uid)
@@ -176,7 +178,30 @@ def customerDashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
-    return render(request, 'accounts/vendorDashboard.html')
+    vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True).order_by('-ordered_at')
+    recent_orders = orders[:10]
+
+    # Current months revenue
+    current_month = datetime.datetime.now().month
+    current_months_orders = orders.filter(vendors__in=[vendor.id], ordered_at__month=current_month).order_by('-ordered_at')
+    current_months_revenue = 0
+    for i in current_months_orders:
+        current_months_revenue += i.get_total_by_vendor()['grand_total']
+
+    # Total revenue
+    total_revenue = 0
+    for i in orders:
+        total_revenue += i.get_total_by_vendor()['grand_total']
+
+    context = {
+        'orders' : orders,
+        'orders_count' : orders.count(),
+        'recent_orders' : recent_orders,
+        'total_revenue' : total_revenue,
+        'current_months_revenue' : current_months_revenue,
+    }
+    return render(request, 'accounts/vendorDashboard.html', context)
 
 def forgotPassword(request):
     if request.method == 'POST':

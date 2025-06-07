@@ -1,11 +1,42 @@
 {% autoescape off %}
 
-Hello {{user.first_name}},<br>
-<br>
-Please click on the the link below to confirm your registation to FoodOnline Maketplace, and confirm your email for your account:<br>
-<br>
-http://{{domain}}{% url 'activate' uidb64=uid token=token %}<br>
-<br>
-Kind Regards<br>
-FoodOnline Marketplace<br>
+<html>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
+    <div id="email">
+        <table role="presentation" width="100%">
+            <tr>
+            <td  align="center">
+            <img alt="Logo" src="https://rathank.com/foodonline/logo/logo.png" width="400px" align="middle">
+            </td>
+        </table>
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px;">
+            <h2 style="color: #2c3e50; margin-top: 0;">Confirm Your Email Address</h2>
+
+            <p>Hello <strong>{{ user.first_name }}</strong>,</p>
+
+            <p>Thank you for registering with FoodOnline Marketplace! Please confirm your email address to activate your account.</p>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="http://{{domain}}{% url 'activate' uidb64=uid token=token %}"
+                style="background-color: #2c3e50; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+                    Confirm Email Address
+                </a>
+            </div>
+
+            <p>If you didn't request this account, you can safely ignore this email.</p>
+
+            <p style="margin-top: 30px;">
+                Kind Regards,<br>
+                <strong>FoodOnline Marketplace Team</strong>
+            </p>
+
+            <p style="font-size: 12px; color: #777; margin-top: 20px;">
+                This link will expire in 24 hours.<br>
+                If the button doesn't work, copy and paste this link into your browser:<br>
+                http://{{domain}}{% url 'activate' uidb64=uid token=token %}
+            </p>
+        </div>
+    </div>
+</body>
+</html>
 {% endautoescape %}

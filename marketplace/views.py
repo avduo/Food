@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
-import stripe
 
 from accounts.models import UserProfile
 from marketplace.utils import get_current_opening_slots

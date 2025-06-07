@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.http import JsonResponse
+
+from orders.models import Order, OrderedProduct
 from .forms import VendorForm, OpeningHoursForm
 from accounts.forms import UserProfileForm
 
@@ -223,3 +225,27 @@ def delete_opening_hours(request, pk=None):
             hour = get_object_or_404(OpeningHours, pk=pk)
             hour.delete()
             return JsonResponse({'status': 'success', 'id': pk})
+
+def order_detail(request, order_number):
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        ordered_products = OrderedProduct.objects.filter(order=order, product_item__vendor=get_vendor(request))
+    except:
+        return redirect('vendor')
+    context = {
+        'order': order,
+        'ordered_products': ordered_products,
+        'subtotal': order.get_total_by_vendor()['subtotal'],
+        'tax': order.get_total_by_vendor()['tax'],
+        'grand_total': order.get_total_by_vendor()['grand_total'],
+        'tax_data': order.get_total_by_vendor()['tax_dict'],
+    }
+    return render(request, 'vendor/order_detail.html', context)
+
+def my_orders(request):
+    vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True).order_by('-ordered_at')
+    context = {
+        'orders' : orders,
+    }
+    return render(request, 'vendor/my_orders.html', context)

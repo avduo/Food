@@ -17,11 +17,11 @@ def get_cart_counter(request):
             cart_count = 0
     return dict(cart_count=cart_count)
 
-tax_dict = {}  # Initialize an empty dictionary to store tax information
 def get_cart_amounts(request):
     subtotal = 0
     tax = 0
     grand_total = 0
+    tax_dict = {}  # Initialize an empty dictionary to store tax information
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
         for item in cart_items:

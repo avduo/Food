@@ -7,7 +7,8 @@ import uuid
 from django.shortcuts import redirect, render
 
 from marketplace.context_processors import get_cart_amounts
-from marketplace.models import Cart
+from marketplace.models import Cart, Tax
+from menu.models import ProductItem
 from orders.forms import OrderForm
 from orders.models import Order, OrderedProduct, Payment
 from vendor.models import Vendor
@@ -27,6 +28,36 @@ def place_order(request):
     cart_count = cart_items.count()
     if cart_count <= 0:
         return redirect('marketplace')
+
+    vendors_ids = []
+    for i in cart_items:
+        if i.product_item.vendor.id not in vendors_ids:
+            vendors_ids.append(i.product_item.vendor.id)
+
+    get_tax = Tax.objects.filter(is_active=True)
+    subtotal = 0
+    total_data = {}
+    k = {}
+    for i in cart_items:
+        productitem = ProductItem.objects.get(pk=i.product_item.id, vendor_id__in=vendors_ids)
+        v_id = productitem.vendor.id
+        if v_id in k:
+            subtotal = k[v_id]
+            subtotal += (productitem.price * i.quantity)
+            k[v_id] = subtotal
+        else:
+            subtotal = (productitem.price * i.quantity)
+            k[v_id] = subtotal
+
+
+        tax_dict = {}
+        for i in get_tax:
+            tax_type = i.tax_type
+            tax_percentage = i.tax_percentage
+            tax_ammount = float(round((tax_percentage * subtotal) / 100, 2))
+            tax_dict.update({tax_type: {str(tax_percentage) : tax_ammount}})
+        # Contruct total data
+        total_data.update({productitem.vendor.id:{str(subtotal): str(tax_dict)}})
 
     subtotal = get_cart_amounts(request)['subtotal']
     total_tax = get_cart_amounts(request)['tax']
@@ -52,8 +83,10 @@ def place_order(request):
             order.total = grand_total
             order.payment_method = request.POST.get('payment-method', 'Stripe')
             order.tax_data = json.dumps(tax_data)
+            order.total_data = json.dumps(total_data)
             order.save()
             order.order_number = generate_order_number(order.id)
+            order.vendors.add(*vendors_ids)
             order.save()
             context = {
                 'order': order,
@@ -150,7 +183,7 @@ def order_complete(request):
                         redirect_url=(f'/orders/order-complete/?order_no={order_number}&trans_id={session_id}')
                         # print(f"Attempting redirect to: {redirect_url}")
                         # cart_items.delete()
-                        Cart.objects.filter(user=order.user).delete()
+
                         return redirect(redirect_url)
                     else:
                         print("ERROR: No order_number in metadata")
@@ -163,6 +196,7 @@ def order_complete(request):
     try:
         order = Order.objects.get(order_number=order_number, payment__transaction_id=transaction_id, is_ordered=True)
         ordered_products = OrderedProduct.objects.filter(order=order)
+        Cart.objects.filter(user=order.user).delete()
 
         subtotal = 0
         for item in ordered_products:
@@ -253,9 +287,7 @@ def handle_stripe_payment_success(session):
     try:
         order = Order.objects.get(order_number=order_number)
         payment = Payment.objects.get(order=order)
-        # payment = Payment.objects.get(
-        #     transaction_id__startswith=f'STRIPE_{payment_intent}'
-        # )
+
         payment.transaction_id = payment_intent  # Update to final ID
         payment.status = 'Completed'
         payment.save()
