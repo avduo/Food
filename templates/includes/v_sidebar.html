@@ -6,8 +6,8 @@
             <li class="{% if 'menu-builder' in request.path %}active{% endif %}"><a href="{% url 'menu_builder' %}"><i class="icon-restaurant_menu"></i>Menu Builder</a></li>
             <li class="{% if 'opening-hours' in request.path %}active{% endif %}"><a href="{% url 'opening_hours' %}"><i class="icon-schedule"></i>Opening Hours</a></li>
             <li class="{% if 'my-orders' in request.path %}active{% endif %}"><a href="{% url 'vendor_my_orders' %}"><i class="icon-add_shopping_cart"></i>My Orders</a></li>
-            <li><a href="#"><i class="icon-money"></i>Earnings</a></li>
-            <li><a href="#"><i class="icon-file-text22"></i>Statement</a></li>
+            {% comment %} <li><a href="#"><i class="icon-money"></i>Earnings</a></li>
+            <li><a href="#"><i class="icon-file-text22"></i>Statement</a></li> {% endcomment %}
             <li><a href="{% url 'vendor_detail' vendor.vendor_slug %}"><i class="icon-building"></i>My Restaurant</a></li>
             <li><a href="{% url 'forgotPassword' %}"><i class="icon-unlock-alt"></i>Change Password</a></li>
             <li><a class="logout-btn" href="{% url 'logout' %}"><i class="icon-log-out"></i>Signout</a></li>

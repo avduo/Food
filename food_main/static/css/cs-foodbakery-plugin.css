@@ -2843,7 +2843,7 @@ ul.sub-nav { text-align: left; }
 .menu-itam-holder .menu-itam-list .image-holder + .text-holder { display: block; padding-left: 0; width: -webkit-calc(100% - 90px); width: -moz-calc(100% - 90px); width: calc(100% - 90px); }
 .company-logo.fancy ul li { width: 50%; }
 .main-location > ul > li ul { width: 215px; }
-.image-holder + .text-holder + .price-holder { margin-top: 0; top: 50px; }
+.image-holder + .text-holder + .price-holder { margin-top: 0; top: 35px; }
 .main-location > ul > li ul { left: -25px; }
 .main-search.classic .field-holder span.foodbakery-radius-location {right: 20px;}
 .main-search.classic .field-holder input[type="text"] {padding-right:50px;}
@@ -2914,7 +2914,6 @@ ul.sub-nav { text-align: left; }
 .user-dashboard .earning-calculation li strong { float: none; display: block; margin: 10px 0 0 0; }
 .select-location .slider.slider-horizontal { width: 60%; }
 .company-info-detail .company-info .text-holder ul.user-info-contact li a { line-height: 22px; display: block; font-size: 12px; }
-.company-info-detail .company-info .img-holder { width: 50px; }
 .company-info-detail .company-info .text-holder { -webkit-width: calc(100% - 50px); -moz-width: calc(100% - 50px); width: calc(100% - 50px); }
 .listing.fancy .list-option { top: 10px; right: 10px; -webkit-transform: translateY(0); -moz-transform: translateY(0); -ms-transform: translateY(0); -o-transform: translateY(0); transform: translateY(0); }
 .pricetable-holder .cs-price h2 { font-size: 18px !important; }

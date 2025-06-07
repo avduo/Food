@@ -146,3 +146,71 @@ body, .main-section p, .mce-content-body p{
   justify-content: center;
   height: 100%;
 }
+table td {
+    white-space: nowrap;
+    padding: 0.5rem;
+}
+/* Vendor Dashboard */
+.table td {
+    padding: 0.5rem;
+}
+/* Cart */
+.price-holder.qty-holder{
+    margin-top:30px !important;
+}
+
+@media only screen and (max-width: 480px) {
+    a.get-start-btn {
+    display: block;
+    margin-top: 8px !important;
+}
+ .search-bar {
+        padding-top: 100px !important;
+        padding-bottom: 75px !important;
+        background-position: left !important;
+    }
+.footer-widget .widget-newsletter .fieldset{
+    width: unset;
+}
+.footer-widget .widget-newsletter .fieldset form .field-holder.btn-holder{
+    width: 30%;
+}
+.footer-widget .widget-newsletter .fieldset form .field-holder{
+    width: 100%;
+}
+/* vendor detail page */
+.company-info-detail {
+    float: none;
+}
+.company-info{
+    display: flex !important;
+    justify-content: center;
+}
+.company-info-detail .text-holder {
+    align-content: center;
+}
+.company-info-inner{
+padding-left: 10px;
+}
+.company-info-detail .listing .restaurant-status{
+    left: 15px;
+}
+/* cart */
+.menu-itam-holder .menu-itam-list .text-holder h6{
+    max-width: unset;
+}
+.price-holder.qty-holder{
+    margin-top:35px !important;
+}
+/*  */
+.price.float-right {
+  white-space: nowrap;
+}
+.price-cell {
+    text-align: right;
+    padding-right: 15px;
+}
+.image-td {
+ padding: 4px !important;
+}
+}

@@ -27,7 +27,7 @@
                                     <tr id="hour-{{ hour.id }}">
                                         <td><b>{{ hour }}</b></td>
                                         <td>{% if hour.is_closed %}Closed {% else %} {{ hour.opening_time }} - {{ hour.closing_time }} {% endif %}</td>
-                                        <td><a href="#"><i class="text-primary fa-solid fa-pencil"></i></a></td>
+                                        {% comment %} <td><a href="#"><i class="text-primary fa-solid fa-pencil"></i></a></td> {% endcomment %}
                                         <td><a href="#"><i class="text-danger delete_hours fa-solid fa-trash" data-url="{% url 'delete_opening_hours' hour.id %}"></i></a></td>
                                     </tr>
                                     {% endfor %}
@@ -55,7 +55,7 @@
                                             <span class="checkmark">✔</span>
                                             <p>Set As Closed</p>
                                     </div>
-                                    <div class ="col-md-2">
+                                    <div class ="col-md-2 pb-3">
                                         <input type="hidden" value="{% url 'add_opening_hours' %}" id="add_hours_url">
                                         <button class="btn btn-success add_hours">Add Hours</button>
                                 </div>

@@ -58,12 +58,13 @@
                                                         <div><a class="badge badge-warning">{{ item.product_item.vendor.vendor_name }}</a></div>
                                                     </td>
                                                     <td>{{ item.quantity }}</td>
-                                                    <td><span class="price float-right">{{ item.product_item.price }} €</span></td>
+                                                    <td class="price-cell">
+                                                        <span class="price float-right">{{ item.product_item.price }} €</span>
+                                                    </td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
                                         </table>
-
                                         <ul class="pb-3">
                                             <li style="list-style-type: none;" >
                                                 Subtotal

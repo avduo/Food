@@ -28,7 +28,8 @@
                                                 {% for item in cart_items %}
                                                 <li id="cart-item-{{ item.id }}">
                                                     <div class="image-holder"> <a href="{{ item.product_item.image.url }}" data-lightbox="image-{{ item.id }}" data-title="{{ item.product_item }}">
-                                                        <img src="{{ item.product_item.image.url }}" alt="{{item.product_item}}"></a></div>
+                                                        <img src="{{ item.product_item.image.url }}" alt="{{item.product_item}}"></a>
+                                                    </div>
                                                     <div class="text-holder">
                                                         <h6>{{item.product_item}}</h6>
                                                         <span>{{item.product_item.description}}</span>
@@ -36,10 +37,13 @@
                                                     </div>
                                                     <div class="price-holder">
                                                         <span class="price">{{item.product_item.price}} €</span>
-                                                        <a href="#" class="remove_from_cart" data-id="{{ item.product_item.id }}" id="{{ item.id }}" data-url="{% url 'remove_from_cart' item.product_item.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
-                                                        <label id="qty-{{ item.product_item.id }}" ml-2>0</label>
-                                                        <a href="#" class="add_to_cart" data-id="{{ item.product_item.id }}" data-url="{% url 'add_to_cart' item.product_item.id %}"><i class="icon-plus4 text-color"></i></a>
-                                                        <a href="#" class="delete_cart" data-id="{{ item.id }}" data-url="{% url 'delete_cart' item.id %}"><i class="icon-delete text-color"></i></a>
+                                                    </div>
+                                                        <div class="price-holder qty-holder">
+                                                            <a href="#" class="remove_from_cart" data-id="{{ item.product_item.id }}" id="{{ item.id }}" data-url="{% url 'remove_from_cart' item.product_item.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
+                                                            <label id="qty-{{ item.product_item.id }}" ml-2>0</label>
+                                                            <a href="#" class="add_to_cart" data-id="{{ item.product_item.id }}" data-url="{% url 'add_to_cart' item.product_item.id %}"><i class="icon-plus4 text-color"></i></a>
+                                                            <a href="#" class="delete_cart" data-id="{{ item.id }}" data-url="{% url 'delete_cart' item.id %}"><i class="icon-delete text-color"></i></a>
+                                                        </div>
                                                     </div>
                                                 </li>
                                                 {% endfor %}
