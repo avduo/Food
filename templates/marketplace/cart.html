@@ -38,6 +38,7 @@
                                                     <div class="price-holder">
                                                         <span class="price">{{item.product_item.price}} €</span>
                                                     </div>
+                                                    <div>
                                                         <div class="price-holder qty-holder">
                                                             <a href="#" class="remove_from_cart" data-id="{{ item.product_item.id }}" id="{{ item.id }}" data-url="{% url 'remove_from_cart' item.product_item.id %}" style="margin-right: 28px;"><i class="icon-minus text-color"></i></a>
                                                             <label id="qty-{{ item.product_item.id }}" ml-2>0</label>
